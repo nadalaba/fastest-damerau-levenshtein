@@ -6,36 +6,6 @@ on:
   pull_request:
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0   # required so git diff works correctly
-
-      - uses: pnpm/setup@v3
-        with:
-          version: 11
-          runtime: node@26
-          cache: true
-          install: false
-
-      - name: Run formatter
-        run: pnpm dlx oxfmt .
-
-      - name: Commit changes if any
-        run: |
-          if git diff --quiet; then
-            echo "No formatting changes detected."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .
-            git commit -m "format [bot]"
-            git push
-          fi
-
   lint-build-test:
     runs-on: ubuntu-latest
     strategy:
@@ -45,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/setup@v2
+      - uses: pnpm/setup@v3
         with:
-          version: 12
+          version: 11
           runtime: node@${{ matrix.node }}
           cache: true
 
@@ -62,3 +32,6 @@ jobs:
 
       - name: Test
         run: pn test
+
+      - name: Format check
+        run: pn format:check
