@@ -7,8 +7,8 @@ import {
   preparePattern,
   zeroPreparedPattern,
 } from "./pattern.ts";
-import { toString } from "./utils.ts";
-export { toString } from "./utils.ts";
+//import { toString } from "./utils.ts";
+//export { toString } from "./utils.ts";
 
 let mat: number[][] = [];
 
@@ -365,7 +365,7 @@ export function compare<O extends DistanceOptions>(
   const { distance, edits } = calculate(text, options);
   ret.distance = distance;
   ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
-  if (options?.debug) console.log(toString(pattern, text, mat));
+  //if (options?.debug) console.log(toString(pattern, text, mat));
   if (options?.withEditSequence && "editSequence" in ret) {
     const sequence = [];
     /**
