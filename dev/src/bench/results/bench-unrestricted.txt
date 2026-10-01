@@ -1,0 +1,357 @@
+clk: ~3.06 GHz
+cpu: Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz
+runtime: node 26.7.0 (x64-win32)
+
+benchmark                                                        avg (min … max) p75 / p99    (min … top 1%)
+-------------------------------------------------------------------------------- -------------------------------
+fastest-damerau-levenshtein (unrestricted)(4)            380.04 ns/iter 373.54 ns  █                   
+                                                           (317.04 ns … 1.41 µs) 888.60 ns ▃█▇                  
+                                                         (705.19  b …   2.37 kb) 929.81  b ███▄▃▂▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁
+
+fastest-damerau-levenshtein (unrestricted)(16)           892.35 ns/iter 912.28 ns  ▂ ▂▂█▃              
+                                                           (766.02 ns … 1.30 µs)   1.18 µs  █▃████▃             
+                                                         (  1.82 kb …   2.12 kb)   1.83 kb ▃███████▅▆▃▇▃▂▇▃▄▃▁▂▂
+
+fastest-damerau-levenshtein (unrestricted)(64)            12.87 µs/iter  12.70 µs   █                  
+                                                           (9.40 µs … 430.40 µs)  35.00 µs  ▄█▄                 
+                                                         ( 96.00  b … 327.20 kb)  19.46 kb ▁███▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+fastest-damerau-levenshtein (unrestricted)(256)           79.63 µs/iter  79.60 µs    █                 
+                                                          (67.90 µs … 448.90 µs) 128.90 µs  ▃ █▇                
+                                                         (  1.25 kb … 322.92 kb)  68.19 kb ▂████▃▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁
+
+fastest-damerau-levenshtein (unrestricted)(1024)         801.52 µs/iter 815.30 µs      █               
+                                                           (728.30 µs … 1.30 ms)   1.08 ms  ▃ ▂▂█               
+                                                         (242.70 kb … 252.65 kb) 244.40 kb ▆█▆███▅▃▂▂▁▁▁▁▁▁▁▁▁▁▁
+
+fastest-damerau-levenshtein (unrestricted)(4096)          10.82 ms/iter  11.02 ms  █                   
+                                                           (10.29 ms … 12.67 ms)  11.44 ms  █       ▆ ██ ▃ ▃    
+                                                         (918.11 kb …   1.00 mb) 959.84 kb ███▆▁▆▁█▆██████▄█▆▄▁▄
+
+lowrance-wagner (unrestricted)(4)                         95.81 µs/iter  96.37 µs   █      █           
+                                                          (87.47 µs … 117.35 µs) 104.27 µs ▅ █▅▅   ▅█ ▅   ▅    ▅
+                                                         (  3.19  b …  46.01  b)  28.07  b █▁███▁▁▁██▁█▁▁▁█▁▁▁▁█
+
+lowrance-wagner (unrestricted)(16)                       107.25 µs/iter 105.53 µs           ██         
+                                                         (101.04 µs … 138.60 µs) 107.05 µs ▅   ▅     ██▅ ▅▅ ▅  ▅
+                                                         ( 18.33  b … 238.74  b)  67.63  b █▁▁▁█▁▁▁▁▁███▁██▁█▁▁█
+
+lowrance-wagner (unrestricted)(64)                       331.66 µs/iter 339.10 µs █ ▇                  
+                                                           (151.60 µs … 4.23 ms)   2.13 ms █ █                  
+                                                         ( 41.87 kb … 369.79 kb)  86.93 kb ███▃▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+lowrance-wagner (unrestricted)(256)                        2.93 ms/iter   2.58 ms ▇█                   
+                                                            (2.22 ms … 11.78 ms)  11.55 ms ██                   
+                                                         (  1.81 mb …   1.83 mb)   1.82 mb ██▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▁
+
+lowrance-wagner (unrestricted)(1024)                      41.28 ms/iter  41.35 ms       █              
+                                                           (40.37 ms … 43.00 ms)  42.71 ms   █   █ █            
+                                                         ( 14.21 kb …  29.65 mb)  14.83 mb █▁██▁██▁██▁▁█▁▁▁▁▁▁▁█
+
+lowrance-wagner (unrestricted)(4096)                     780.25 ms/iter 792.77 ms   █            █     
+                                                         (753.59 ms … 811.76 ms) 805.41 ms   █            █     
+                                                         (132.60 mb … 148.79 mb) 144.69 mb █▁█▁▁█▁▁█▁▁▁▁▁▁█▁█▁▁█
+
+tony-o/skodld (unrestricted)(4)                            3.47 µs/iter   3.54 µs     █ ▅              
+                                                             (3.13 µs … 4.20 µs)   4.16 µs   ▆ █▆█  ▃           
+                                                         (  0.98 kb …   3.10 kb)   1.64 kb ▄▄█▄███▆▆█▄▁▆▁▁▁▁▄▁▄▄
+
+tony-o/skodld (unrestricted)(16)                          37.94 µs/iter  38.09 µs      █               
+                                                           (36.01 µs … 43.72 µs)  40.38 µs ▅▅▅▅▅█▅   ▅     ▅   ▅
+                                                         (  3.30 kb …   4.03 kb)   3.42 kb ███████▁▁▁█▁▁▁▁▁█▁▁▁█
+
+tony-o/skodld (unrestricted)(64)                         529.00 µs/iter 557.80 µs     ▆▇▅█▅            
+                                                           (410.90 µs … 1.09 ms) 761.60 µs   ▂▇█████▆▃          
+                                                         ( 98.75 kb … 405.19 kb) 140.63 kb ▂▅█████████▇▅▃▃▂▁▁▁▁▁
+
+tony-o/skodld (unrestricted)(256)                          8.61 ms/iter   9.17 ms     ▂▄█              
+                                                            (7.27 ms … 11.66 ms)  11.03 ms   █▆███              
+                                                         (  1.80 mb …   2.40 mb)   2.02 mb ▃▅█████▅▃███▇▃▅▅▃▃▅▁▃
+
+tony-o/skodld (unrestricted)(1024)                       130.59 ms/iter 133.25 ms         █       █    
+                                                         (118.92 ms … 148.78 ms) 136.67 ms ▅   ▅   █▅  ▅ ▅ █▅  ▅
+                                                         ( 10.57 mb …  31.70 mb)  18.05 mb █▁▁▁█▁▁▁██▁▁█▁█▁██▁▁█
+
+tony-o/skodld (unrestricted)(4096)                          2.17 s/iter    2.20 s         █           █
+                                                               (2.11 s … 2.22 s)    2.21 s ▅▅     ▅█  ▅▅  ▅   ▅█
+                                                         (132.68 mb … 173.87 mb) 156.49 mb ██▁▁▁▁▁██▁▁██▁▁█▁▁▁██
+
+owldotco/damerau-levenshtein (unrestricted)(4)             5.13 µs/iter   5.21 µs █   █ █ █            
+                                                             (4.75 µs … 5.87 µs)   5.69 µs ██ ██ █ ███   █   █ █
+                                                         (345.22  b …   1.30 kb) 376.32  b ███████████▁▁▁█▁▁▁█▁█
+
+owldotco/damerau-levenshtein (unrestricted)(16)           44.60 µs/iter  44.95 µs              █       
+                                                           (42.80 µs … 46.40 µs)  45.81 µs              ██      
+                                                         (373.28  b … 386.33  b) 374.58  b █▁█▁▁▁█▁▁█▁▁▁███▁▁▁▁█
+
+owldotco/damerau-levenshtein (unrestricted)(64)          777.92 µs/iter 814.30 µs      ▃█▄             
+                                                           (635.20 µs … 1.30 ms)   1.06 ms    ██████▅▂          
+                                                         (896.00  b …   1.05 kb) 912.34  b ▃▆█████████▆▆▃▃▃▁▁▁▁▁
+
+owldotco/damerau-levenshtein (unrestricted)(256)          13.80 ms/iter  14.19 ms          █ █  ▄      
+                                                           (12.48 ms … 15.08 ms)  15.00 ms        ▅ █▅█ ▅█      
+                                                         (  1.31 kb …   5.72 kb)   1.42 kb ▅▁██▅███████▅████▅▁█▅
+
+owldotco/damerau-levenshtein (unrestricted)(1024)        261.67 ms/iter 266.16 ms       █             █
+                                                         (253.49 ms … 269.20 ms) 267.41 ms ▅   ▅▅█   ▅▅     ▅▅ █
+                                                         (  2.96 kb …   7.38 kb)   3.35 kb █▁▁▁███▁▁▁██▁▁▁▁▁██▁█
+
+owldotco/damerau-levenshtein (unrestricted)(4096)           4.40 s/iter    4.30 s  █                   
+                                                               (4.20 s … 4.99 s)    4.97 s ▅█▅                  
+                                                         (  9.52 kb …  13.93 kb)   9.97 kb ███▇▁▁▁▁▁▁▁▁▁▇▁▁▁▁▁▁▇
+
+nake89/real-damerau-levenshtein (unrestricted)(4)        184.38 µs/iter 162.00 µs    █                 
+                                                            (38.80 µs … 9.15 ms) 818.50 µs   ██                 
+                                                         (  0.98 kb … 198.39 kb)   3.44 kb ▂▂██▅▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+nake89/real-damerau-levenshtein (unrestricted)(16)       183.39 µs/iter 151.20 µs   ▇█                 
+                                                            (48.40 µs … 8.73 ms) 738.00 µs   ██                 
+                                                         (528.00  b … 322.86 kb)   3.41 kb ▁▁██▄▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+nake89/real-damerau-levenshtein (unrestricted)(64)       330.93 µs/iter 280.20 µs  █                   
+                                                            (94.70 µs … 9.84 ms)   2.51 ms  █                   
+                                                         (  0.98 kb … 764.88 kb)   4.23 kb ▁█▇▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+nake89/real-damerau-levenshtein (unrestricted)(256)        1.71 ms/iter   1.91 ms  █                   
+                                                            (1.02 ms … 13.86 ms)   6.32 ms  █                   
+                                                         (752.00  b … 998.30 kb)   8.72 kb ██▆▇▆▄▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+nake89/real-damerau-levenshtein (unrestricted)(1024)      18.06 ms/iter  18.34 ms    ▄█                
+                                                           (16.33 ms … 24.26 ms)  21.77 ms   ███  █▅            
+                                                         (752.00  b …  28.54 kb)   1.95 kb █████▅███▁▁▅▅▁▁▅▅▁▁▁▅
+
+nake89/real-damerau-levenshtein (unrestricted)(4096)     437.58 ms/iter 461.41 ms █                    
+                                                         (395.85 ms … 509.01 ms) 475.17 ms █                   █
+                                                         (752.00  b …  53.09 kb)  18.41 kb █▁▁█▁▁█▁▁██▁▁▁█▁▁█▁▁█
+
+kodmax/damerau-levenshtein-distance (unrestricted)(4)      6.70 µs/iter   6.79 µs █            █       
+                                                             (6.46 µs … 7.55 µs)   6.98 µs █ ██ █    █  █       
+                                                         (187.59  b … 328.86  b) 204.98  b ████▁██▁█▁█▁██▁█▁▁█▁█
+
+kodmax/damerau-levenshtein-distance (unrestricted)(16)    10.89 µs/iter  11.11 µs █            █       
+                                                           (10.42 µs … 11.29 µs)  11.28 µs █ ▅▅      ▅  █ ▅▅▅  ▅
+                                                         (200.02  b … 208.24  b) 200.71  b █▁██▁▁▁▁▁▁█▁▁█▁███▁▁█
+
+kodmax/damerau-levenshtein-distance (unrestricted)(64)    78.72 µs/iter  79.79 µs             █    █   
+                                                           (73.94 µs … 84.52 µs)  80.73 µs ▅   ▅      ▅█▅▅  █▅ ▅
+                                                         ( 25.84  b …  25.84  b)  25.84  b █▁▁▁█▁▁▁▁▁▁████▁▁██▁█
+
+kodmax/damerau-levenshtein-distance (unrestricted)(256)    1.03 ms/iter   1.05 ms     █                
+                                                           (836.10 µs … 7.01 ms)   1.72 ms   ▅██▆               
+                                                         (248.00  b …   5.46 kb) 256.01  b ▂▆████▆▄▂▁▁▂▁▁▁▁▁▁▁▁▁
+
+kodmax/damerau-levenshtein-distance (unrestricted)(1024)  18.17 ms/iter  18.72 ms   ██  ▃              
+                                                           (16.60 ms … 22.26 ms)  21.90 ms ▂ ██▇▇█▂▇▂▂          
+                                                         (248.00  b … 248.00  b) 248.00  b █▆█████████▁▆▁▁▁▁▁▁▁▆
+
+kodmax/damerau-levenshtein-distance (unrestricted)(4096) 424.41 ms/iter 428.91 ms            █ █    █  
+                                                         (409.45 ms … 436.14 ms) 431.29 ms ▅       ▅ ▅█ █   ▅█ ▅
+                                                         (248.00  b … 248.00  b) 248.00  b █▁▁▁▁▁▁▁█▁██▁█▁▁▁██▁█
+
+sarunast/rapidfuzz-js/DL (unrestricted)(4)               925.71 ns/iter 945.87 ns   ▆█▂                
+                                                           (778.44 ns … 1.90 µs)   1.45 µs  ▅███                
+                                                         ( 89.56  b … 973.63  b) 397.26  b ▆█████▃▄▅▃█▃▂▁▂▁▁▁▁▁▂
+
+sarunast/rapidfuzz-js/DL (unrestricted)(16)                5.94 µs/iter   6.05 µs             ▂ █      
+                                                             (5.49 µs … 6.43 µs)   6.26 µs     ▅    ▅▅ █ █   ▅  
+                                                         (  1.11 kb …   1.11 kb)   1.11 kb ▇▁▁▇█▇▁▁▇██▇█▇█▇▁▇█▁▇
+
+sarunast/rapidfuzz-js/DL (unrestricted)(64)               56.09 µs/iter  57.11 µs                    █ 
+                                                           (53.89 µs … 61.24 µs)  57.37 µs ▅ ▅ ▅ ▅▅▅ ▅     ▅  █▅
+                                                         (  1.59 kb …   1.60 kb)   1.60 kb █▁█▁█▁███▁█▁▁▁▁▁█▁▁██
+
+sarunast/rapidfuzz-js/DL (unrestricted)(256)             770.70 µs/iter 788.70 µs   █▆▄                
+                                                           (682.10 µs … 1.32 ms)   1.25 ms  ████                
+                                                         (  1.73 kb …   6.95 kb)   2.14 kb ▂████▅▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+sarunast/rapidfuzz-js/DL (unrestricted)(1024)             12.03 ms/iter  12.39 ms   ▃            ▃▃█ ▃ 
+                                                           (11.31 ms … 12.83 ms)  12.65 ms  ▂█▇▇▂▂▇ ▇ ▇▂▇▇███ █▂
+                                                         (  2.21 kb …   2.24 kb)   2.21 kb ▆███████▁█▆███████▁██
+
+sarunast/rapidfuzz-js/DL (unrestricted)(4096)            197.56 ms/iter 201.78 ms                    █ 
+                                                         (187.14 ms … 205.73 ms) 202.97 ms ▅ ▅  ▅   ▅ ▅    ▅▅▅█▅
+                                                         (  2.21 kb …   2.24 kb)   2.21 kb █▁█▁▁█▁▁▁█▁█▁▁▁▁█████
+
+@nlptools/distance (unrestricted)(4)                       1.49 µs/iter   1.44 µs  █▃                  
+                                                             (1.20 µs … 5.50 µs)   3.00 µs ▄██                  
+                                                         (397.89  b … 778.72  b) 407.39  b ███▇▃▆▅▂▃▁▁▃▁▁▁▁▃▁▁▁▂
+
+@nlptools/distance (unrestricted)(16)                      5.01 µs/iter   4.88 µs   █                  
+                                                             (4.55 µs … 7.54 µs)   7.09 µs  ▆█                  
+                                                         (  8.05  b … 774.28  b) 399.50  b ▇███▃▁▃▁▁▁▁▁▃▁▁▁▁▁▁▁▃
+
+@nlptools/distance (unrestricted)(64)                     59.55 µs/iter  60.42 µs              █       
+                                                           (54.58 µs … 66.93 µs)  62.95 µs ▅ ▅   ▅▅  ▅▅ █▅   ▅ ▅
+                                                         ( 13.46  b …  93.22  b)  53.34  b █▁█▁▁▁██▁▁██▁██▁▁▁█▁█
+
+@nlptools/distance (unrestricted)(256)                   905.55 µs/iter 928.70 µs      █▃              
+                                                           (777.80 µs … 9.04 ms)   1.19 ms  ▄█████▃▂            
+                                                         (448.00  b …   5.09 kb) 454.29  b ▃████████▆▇▆▄▃▂▂▁▁▁▁▁
+
+@nlptools/distance (unrestricted)(1024)                   15.92 ms/iter  16.32 ms       █ █            
+                                                           (14.95 ms … 18.06 ms)  17.28 ms      ▅█▅█      ▅     
+                                                         (448.00  b …  24.60 kb)   1.01 kb █▅██▅█████▁▅█▅██▁▅▁▁▅
+
+@nlptools/distance (unrestricted)(4096)                  274.29 ms/iter 279.28 ms                   ██ 
+                                                         (257.42 ms … 282.21 ms) 280.63 ms ▅       ▅ ▅ ▅ ▅ ▅ ██▅
+                                                         (448.00  b … 448.00  b) 448.00  b █▁▁▁▁▁▁▁█▁█▁█▁█▁█▁███
+
+@nlptools/distance-wasm (unrestricted)(4)                  1.13 µs/iter   1.14 µs    █                 
+                                                           (985.11 ns … 2.08 µs)   1.84 µs   ▅█▆                
+                                                         ( 83.83  b … 679.14  b) 231.82  b ▃████▄▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+@nlptools/distance-wasm (unrestricted)(16)                 8.62 µs/iter   8.85 µs                    █ 
+                                                             (8.26 µs … 8.91 µs)   8.89 µs  █ █      █        ██
+                                                         (228.16  b … 236.40  b) 228.80  b ██▁█▁▁▁█▁▁█▁▁▁█▁▁█▁██
+
+@nlptools/distance-wasm (unrestricted)(64)               129.20 µs/iter 138.20 µs        ▅█▅▃          
+                                                          (84.90 µs … 303.80 µs) 185.90 µs      ▄█████▆▃        
+                                                         (288.00  b … 252.23 kb)   1.13 kb ▁▂▂▄██████████▅▃▂▁▁▁▁
+
+@nlptools/distance-wasm (unrestricted)(256)                2.09 ms/iter   2.17 ms       ▂▂ █▃          
+                                                             (1.80 ms … 2.69 ms)   2.47 ms     ▅███▆██▆▂▃       
+                                                         (336.00  b … 576.00  b) 356.21  b ▄▃▇████████████▆▅▃▂▁▂
+
+@nlptools/distance-wasm (unrestricted)(1024)              35.54 ms/iter  36.12 ms █ █                  
+                                                           (34.44 ms … 36.49 ms)  36.49 ms █ █    ▅▅▅▅  ▅▅▅▅▅ ▅▅
+                                                         (336.00  b … 576.00  b) 360.80  b █▁█▁▁▁▁████▁▁█████▁██
+
+@nlptools/distance-wasm (unrestricted)(4096)             597.80 ms/iter 601.64 ms            █     █   
+                                                         (581.26 ms … 606.92 ms) 605.14 ms ▅       ▅  █ ▅▅▅ █ ▅▅
+                                                         (336.00  b … 576.00  b) 377.33  b █▁▁▁▁▁▁▁█▁▁█▁███▁█▁██
+
+weylermaldonado/hermetricsjsDL (unrestricted)(4)           2.89 µs/iter   2.92 µs        █▂            
+                                                             (2.59 µs … 4.44 µs)   3.28 µs       ▃██ ▃          
+                                                         (  1.50 kb …   2.04 kb)   1.62 kb ▅▅█▅▁▃███▇█▃▁▅▃▃▃▃▅▁▃
+
+weylermaldonado/hermetricsjsDL (unrestricted)(16)         31.32 µs/iter  31.56 µs               █      
+                                                           (29.91 µs … 33.43 µs)  32.15 µs ▅▅  ▅    ▅▅  ▅█▅   ▅▅
+                                                         (  2.99 kb …   3.00 kb)   2.99 kb ██▁▁█▁▁▁▁██▁▁███▁▁▁██
+
+weylermaldonado/hermetricsjsDL (unrestricted)(64)        467.24 µs/iter 495.50 µs      ▂█▅▆▅           
+                                                         (346.90 µs … 925.70 µs) 644.50 µs    ▃▄██████▅         
+                                                         ( 96.90 kb … 298.16 kb) 135.19 kb ▁▃▅██████████▇▅▄▂▂▂▁▁
+
+weylermaldonado/hermetricsjsDL (unrestricted)(256)         7.68 ms/iter   7.97 ms        █             
+                                                             (6.81 ms … 9.16 ms)   8.97 ms       ██▄  ▇         
+                                                         (  1.75 mb …   2.37 mb)   2.01 mb ▆▆▆▇▇███████▇▁▄▄▆▃▁▃▃
+
+weylermaldonado/hermetricsjsDL (unrestricted)(1024)      119.56 ms/iter 120.48 ms           █          
+                                                         (112.05 ms … 131.30 ms) 123.51 ms ▅     ▅  ▅█▅ ▅▅▅  ▅ ▅
+                                                         ( 10.88 mb …  31.66 mb)  18.08 mb █▁▁▁▁▁█▁▁███▁███▁▁█▁█
+
+weylermaldonado/hermetricsjsDL (unrestricted)(4096)         2.01 s/iter    2.02 s          █           
+                                                               (1.96 s … 2.12 s)    2.06 s ▅▅ ▅   ▅▅█▅ ▅ ▅     ▅
+                                                         (127.87 mb … 184.22 mb) 154.23 mb ██▁█▁▁▁████▁█▁█▁▁▁▁▁█
+
+hellojayjay/string-metricDL (unrestricted)(4)              4.52 µs/iter   3.99 µs   █                  
+                                                             (3.40 µs … 9.59 µs)   8.68 µs  ▄█                  
+                                                         (  1.49 kb …   2.92 kb)   1.67 kb ▆██▁▁▁▁▃▁▁▁▁▁▁▃▄▁▁▁▁▃
+
+hellojayjay/string-metricDL (unrestricted)(16)            42.84 µs/iter  43.23 µs    █                 
+                                                           (41.87 µs … 43.97 µs)  43.91 µs ▅ ▅█▅  ▅  ▅▅ ▅     ▅▅
+                                                         (  3.20 kb …   3.22 kb)   3.21 kb █▁███▁▁█▁▁██▁█▁▁▁▁▁██
+
+hellojayjay/string-metricDL (unrestricted)(64)           611.18 µs/iter 656.00 µs      ▃▅▄██▅          
+                                                           (420.50 µs … 1.13 ms) 869.90 µs     ▅███████▃        
+                                                         ( 98.13 kb … 183.51 kb) 136.69 kb ▁▂▄███████████▆▄▃▃▂▂▁
+
+hellojayjay/string-metricDL (unrestricted)(256)            9.90 ms/iter  10.25 ms       █ █▅▂          
+                                                            (8.70 ms … 11.56 ms)  11.34 ms    ▂▂▅█ ███▅▅ ▅▇     
+                                                         (  1.76 mb …   2.38 mb)   2.02 mb ▄▄▇████▇█████▄██▄▁▇▁▄
+
+hellojayjay/string-metricDL (unrestricted)(1024)         159.23 ms/iter 163.83 ms          █           
+                                                         (145.89 ms … 176.00 ms) 168.52 ms          ██          
+                                                         ( 11.24 mb …  31.68 mb)  18.37 mb █▁▁▁▁▁█▁███▁▁▁▁▁█▁▁██
+
+hellojayjay/string-metricDL (unrestricted)(4096)            2.59 s/iter    2.60 s       █              
+                                                               (2.53 s … 2.67 s)    2.66 s ▅ ▅▅ ▅█ ▅ ▅▅      ▅ ▅
+                                                         (126.78 mb … 183.21 mb) 152.34 mb █▁██▁██▁█▁██▁▁▁▁▁▁█▁█
+
+nodeve-com/nodeve (unrestricted)(4)                        4.15 µs/iter   4.20 µs        ▅█            
+                                                             (3.66 µs … 5.19 µs)   4.88 µs        ██            
+                                                         (569.98  b …   4.29 kb)   1.49 kb ▆▁▁▆██▁███▁▆▁▁▄▄▄▁▁▁▄
+
+nodeve-com/nodeve (unrestricted)(16)                      41.58 µs/iter  41.46 µs     ██               
+                                                           (37.75 µs … 49.78 µs)  47.23 µs ▅ ▅ ██▅▅▅  ▅        ▅
+                                                         (  2.46 kb …   2.52 kb)   2.48 kb █▁█▁█████▁▁█▁▁▁▁▁▁▁▁█
+
+nodeve-com/nodeve (unrestricted)(64)                     556.61 µs/iter 600.20 µs       ▅█▇▃           
+                                                           (375.20 µs … 1.00 ms) 814.80 µs     ▄██████▆▃        
+                                                         ( 96.39 kb … 292.35 kb) 134.13 kb ▂▂▄▇█████████▆▄▅▂▂▂▂▁
+
+nodeve-com/nodeve (unrestricted)(256)                      8.74 ms/iter   9.10 ms       ▃▃██           
+                                                            (7.47 ms … 10.29 ms)  10.18 ms     ▆▃████▆█  ▃█     
+                                                         (  1.75 mb …   2.37 mb)   2.02 mb ▄▄▄▄████████████▄▄▁▄▄
+
+nodeve-com/nodeve (unrestricted)(1024)                   139.32 ms/iter 141.44 ms            █         
+                                                         (125.92 ms … 151.28 ms) 146.42 ms            █  █      
+                                                         ( 11.05 mb …  31.65 mb)  18.10 mb █▁▁▁▁▁█▁▁▁▁██▁██▁█▁▁█
+
+nodeve-com/nodeve (unrestricted)(4096)                      2.31 s/iter    2.33 s                █     
+                                                               (2.23 s … 2.37 s)    2.35 s                █    █
+                                                         (137.81 mb … 180.34 mb) 157.36 mb █▁▁▁█▁▁▁█▁██▁▁▁██▁▁▁█
+
+derodero24/rapid-fuzzy (unrestricted)(4)                   1.35 µs/iter   1.40 µs █▄                   
+                                                             (1.27 µs … 1.67 µs)   1.53 µs ██ ▄ ▅▂ ▅▇█ ▂        
+                                                         (  0.00  b … 376.62  b)  12.98  b ████▅████████▁▆▁▁▂▂▁▄
+
+derodero24/rapid-fuzzy (unrestricted)(16)                  6.85 µs/iter   6.99 µs  █                   
+                                                             (6.51 µs … 7.43 µs)   7.23 µs  █       ▅  ▅▅  ▅    
+                                                         (  0.00  b … 125.10  b)   5.42  b ▇█▇▇▇▁▁▁▇█▇▁██▁▇█▇▁▁▇
+
+derodero24/rapid-fuzzy (unrestricted)(64)                 72.59 µs/iter  74.70 µs      ▄██             
+                                                          (58.70 µs … 173.30 µs) 103.00 µs     ▅███▅            
+                                                         (  0.00  b … 178.30 kb) 434.08  b ▁▂▄▇█████▆▂▁▁▁▁▁▁▁▁▁▁
+
+derodero24/rapid-fuzzy (unrestricted)(256)                 1.02 ms/iter   1.04 ms       ▅██▃           
+                                                           (911.10 µs … 1.59 ms)   1.20 ms      ▅████▅          
+                                                         ( 48.00  b …  48.00  b)  48.00  b ▂▄▅▆███████▆▄▂▂▂▁▁▁▁▁
+
+derodero24/rapid-fuzzy (unrestricted)(1024)               17.36 ms/iter  17.62 ms             █        
+                                                           (16.30 ms … 18.27 ms)  18.17 ms      ▂▇▇▂▂▂▇█▂▂  ▂▂ ▇
+                                                         ( 48.00  b …  48.00  b)  48.00  b ▆▆▁▁▁██████████▆▁██▁█
+
+derodero24/rapid-fuzzy (unrestricted)(4096)              296.14 ms/iter 304.22 ms                 █  █ 
+                                                         (278.19 ms … 315.48 ms) 305.70 ms ▅ ▅ ▅   ▅   ▅  ▅█  █▅
+                                                         ( 48.00  b …  48.00  b)  48.00  b █▁█▁█▁▁▁█▁▁▁█▁▁██▁▁██
+
+denizkose/markov-chain (unrestricted)(4)                   3.65 µs/iter   3.71 µs              █       
+                                                             (3.40 µs … 3.88 µs)   3.87 µs ▂         ▅▅▇█▂▂     
+                                                         (  1.98 kb …   2.88 kb)   2.22 kb █▄▄▄▄▁▄▄▇▄██████▄▁▁▄▄
+
+denizkose/markov-chain (unrestricted)(16)                 48.89 µs/iter  49.05 µs               █      
+                                                           (46.70 µs … 50.69 µs)  50.02 µs           █  ██      
+                                                         (  2.33 kb …   2.34 kb)   2.34 kb █▁▁▁▁▁▁▁▁▁█▁████▁▁▁▁█
+
+denizkose/markov-chain (unrestricted)(64)                611.64 µs/iter 651.90 µs    ▃█▇▂              
+                                                           (426.50 µs … 1.49 ms)   1.12 ms   ▂█████             
+                                                         ( 69.55 kb … 141.27 kb) 103.88 kb ▂▅███████▄▃▂▂▁▁▁▁▁▁▁▁
+
+denizkose/markov-chain (unrestricted)(256)                 8.85 ms/iter   9.14 ms         █            
+                                                            (7.81 ms … 10.76 ms)  10.31 ms   ▃ ▆▆▃ ██▃          
+                                                         (  1.30 mb …   1.71 mb)   1.44 mb ▅▇█▇███▇███▅█▅▃▅▅▃▇▃▃
+
+denizkose/markov-chain (unrestricted)(1024)              138.90 ms/iter 142.05 ms      █               
+                                                         (130.00 ms … 147.77 ms) 146.21 ms ▅  ▅ █ ▅   ▅▅▅ ▅   ▅▅
+                                                         ( 21.63 mb …  22.02 mb)  21.79 mb █▁▁█▁█▁█▁▁▁███▁█▁▁▁██
+
+denizkose/markov-chain (unrestricted)(4096)                 2.23 s/iter    2.25 s        █            █
+                                                               (2.17 s … 2.35 s)    2.26 s ▅▅     █▅ ▅ ▅    ▅ ▅█
+                                                         (  2.42 mb …  28.71 mb)  13.33 mb ██▁▁▁▁▁██▁█▁█▁▁▁▁█▁██
+
+summary
+  fastest-damerau-levenshtein (unrestricted)($strLength)
+   +18.26…+2.44x faster than sarunast/rapidfuzz-js/DL (unrestricted)($strLength)
+   +25.35…+3.92x faster than @nlptools/distance (unrestricted)($strLength)
+   +27.37…+3.56x faster than derodero24/rapid-fuzzy (unrestricted)($strLength)
+   +39.22…+17.63x faster than kodmax/damerau-levenshtein-distance (unrestricted)($strLength)
+   +40.44…+482.54x faster than nake89/real-damerau-levenshtein (unrestricted)($strLength)
+   +55.24…+2.96x faster than @nlptools/distance-wasm (unrestricted)($strLength)
+   +72.1…+252.09x faster than lowrance-wagner (unrestricted)($strLength)
+   +186.14…+7.61x faster than weylermaldonado/hermetricsjsDL (unrestricted)($strLength)
+   +200.54…+9.13x faster than tony-o/skodld (unrestricted)($strLength)
+   +206.22…+9.61x faster than denizkose/markov-chain (unrestricted)($strLength)
+   +213.42…+10.93x faster than nodeve-com/nodeve (unrestricted)($strLength)
+   +239.61…+11.9x faster than hellojayjay/string-metricDL (unrestricted)($strLength)
+   +407.07…+13.5x faster than owldotco/damerau-levenshtein (unrestricted)($strLength)

@@ -1,0 +1,10 @@
+{
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "rules": {
+    "unicorn/no-new-array": "off",
+    "typescript/no-misused-spread": "off"
+  }
+}

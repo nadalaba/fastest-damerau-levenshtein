@@ -1,0 +1,7 @@
+packages:
+  - dev
+
+allowBuilds:
+  "@haggholm/damerau-levenshtein@https://codeload.github.com/owldotco/damerau-levenshtein/tar.gz/571820728040fed8eca383cdb9423e3f70aee703": true
+  hermetrics@https://codeload.github.com/weylermaldonado/hermetricsjs/tar.gz/8953d8a85cbb8cbb1c3f22c8804c1e27ae5bdd09: true
+  text-similarity-node: true

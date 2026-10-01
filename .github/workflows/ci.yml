@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: pnpm/setup@v2
+        with:
+          version: 12
+          runtime: node@26
+          cache: true
+          install: false
+
+      - run: |
+          pnpm dlx oxfmt .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "format [bot]"
+          git push
+
+  lint-build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16, 18, 20, 22, 24, 26]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v2
+        with:
+          version: 12
+          runtime: node@${{ matrix.node }}
+          cache: true
+
+      - name: TypeScript type-check
+        run: pn typecheck
+
+      - name: Lint
+        run: pn lint
+
+      - name: Build
+        run: pn build
+
+      - name: Test
+        run: pn test
