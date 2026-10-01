@@ -14,9 +14,9 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0   # required so git diff works correctly
 
-      - uses: pnpm/setup@v2
+      - uses: pnpm/setup@v3
         with:
-          version: 12
+          version: 11
           runtime: node@26
           cache: true
           install: false
