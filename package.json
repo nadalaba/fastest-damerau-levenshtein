@@ -1,6 +1,6 @@
 {
   "name": "fastest-damerau-levenshtein",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The fastest implementation of unrestricted Damerau-Levenshtein distance in JS/TS.",
   "keywords": [
     "algorithm",
