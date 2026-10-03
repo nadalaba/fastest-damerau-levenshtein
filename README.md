@@ -9,7 +9,7 @@
 ![ESM](https://img.shields.io/badge/ESM-supported-blue)
 ![CJS](https://img.shields.io/badge/CJS-supported-green)
 ![Browser](https://img.shields.io/badge/Browser-supported-yellow)
-[![Bundle size](https://img.shields.io/bundlephobia/minzip/fastest-damerau-levenshtein)](https://bundlephobia.com/package/fastest-damerau-levenshtein)
+[![Bundle size](https://img.shields.io/bundlejs/size/fastest-damerau-levenshtein)](https://bundlephobia.com/package/fastest-damerau-levenshtein)
 
 The unrestricted Damerau-Levenshtein distance measures the minimum number of edits (insertion, deletion, substitution, and transposition) needed to transform one string into another. Unlike the restricted variant (Optimal String Alignment), the unrestricted form is a true metric that satisfies the triangle inequality.
 
