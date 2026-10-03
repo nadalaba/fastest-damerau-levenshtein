@@ -63,8 +63,8 @@ jobs:
 
       - name: Configure .npmrc for GitHub Packages
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ./.npmrc
-          echo "@${{ github.repository_owner }}:registry=https://npm.pkg.github.com/" >> ./.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+          echo "@${{ github.repository_owner }}:registry=https://npm.pkg.github.com/" >> ~/.npmrc
 
       - name: Publish to GitHub Packages registry
         run: pnpm publish --no-git-checks
