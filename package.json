@@ -41,6 +41,7 @@
     "cli.js"
   ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
   "types": "./dist/esm/main.d.ts",
