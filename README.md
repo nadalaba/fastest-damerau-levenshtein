@@ -163,16 +163,16 @@ The **unrestricted** variant is a true metric, meaning it satisfies the triangle
 
 The restricted variant (Optimal String Alignment / OSA) is more commonly implemented but is not a true metric. It only allows transposition if symbols were adjacent in both strings:
 
-- **Restricted:** `d('abc', 'ca') = 3 > d('abc', 'ac') + d('ac', 'ca') = 2` (transposition after deletion not allowed)
-- **Unrestricted:** `d('abc', 'ca') = 2 ≤ d('abc', 'ac') + d('ac', 'ca') = 2` (deletion then transposition allowed)
+- **Restricted:** `d('abc', 'ca') = 3 > d('abc', 'ac') + d('ac', 'ca') = 2` (after deleting 'b', transposition 'ac' -> 'ca' is not allowed)
+- **Unrestricted:** `d('abc', 'ca') = 2 ≤ d('abc', 'ac') + d('ac', 'ca') = 2` (deleting 'b', then transposing 'ac' -> 'ca' is allowed)
 
 This implementation uses the unrestricted form for true metric properties.
 
 ## Performance
 
-Benchmarks using [mitata](https://github.com/evanwashere/mitata) show `fastest-damerau-levenshtein` outperforms all other unrestricted implementations. For strings 4-4096 characters:
+Benchmarks using [mitata](https://github.com/evanwashere/mitata) show `fastest-damerau-levenshtein` outperforms all other implementations.
 
-**Unrestricted implementations:** `fastest-damerau-levenshtein`'s time of iteration (bold red line) is much lower than every other library (lower is better).
+**Unrestricted implementations:** For strings 4-4096 characters, `fastest-damerau-levenshtein`'s time of iteration (bold red line) is much lower than every other library (lower is better).
 
 ![unrestricted-line](./dev/src/bench/results/unrestricted-line.png)
 
