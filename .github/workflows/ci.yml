@@ -26,12 +26,12 @@ jobs:
         run: pn build
 
       - name: Lint
-        if: ${{ matrix.node }} >= 20
+        if: ${{ matrix.node >= 20 }}
         run: pn lint
 
       - name: Test
         run: pn test
 
       - name: Format
-        if: ${{ matrix.node }} >= 20
+        if: ${{ matrix.node >= 20 }}
         run: pn format:check
