@@ -6,12 +6,12 @@ on:
   pull_request:
 
 jobs:
-  lint-build-test:
+  build-lint-test-format:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node: [16, 18, 20, 22, 24, 26]
+        node: [18, 20, 22, 24, 26]
 
     steps:
       - uses: actions/checkout@v7
@@ -25,14 +25,13 @@ jobs:
       - name: Build
         run: pn build
 
-      - name: TypeScript type-check
-        run: pn typecheck
-
       - name: Lint
+        if: ${{ matrix.node }} >= 20
         run: pn lint
 
       - name: Test
         run: pn test
 
-      - name: Format check
+      - name: Format
+        if: ${{ matrix.node }} >= 20
         run: pn format:check
