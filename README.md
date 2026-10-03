@@ -3,12 +3,13 @@
 > Fastest JS/TS implementation of the **unrestricted** Damerau-Levenshtein distance.
 
 [![npm version](https://img.shields.io/npm/v/fastest-damerau-levenshtein)](https://www.npmjs.com/package/fastest-damerau-levenshtein)
-![npm downloads](https://img.shields.io/npm/dm/fastest-damerau-levenshtein)
+[![License](https://img.shields.io/npm/l/fastest-damerau-levenshtein)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
 [![CI](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml/badge.svg)](https://github.com/nadalaba/fastest-damerau-levenshtein/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/license/MIT)
-![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
-![Node.js](https://img.shields.io/node/v/fastest-damerau-levenshtein)
+![ESM](https://img.shields.io/badge/ESM-supported-blue)
+![CJS](https://img.shields.io/badge/CJS-supported-green)
+![Browser](https://img.shields.io/badge/Browser-supported-yellow)
+![Bundle size](https://img.shields.io/bundlephobia/minzip/fastest-damerau-levenshtein)
 
 The unrestricted Damerau-Levenshtein distance measures the minimum number of edits (insertion, deletion, substitution, and transposition) needed to transform one string into another. Unlike the restricted variant (Optimal String Alignment), the unrestricted form is a true metric that satisfies the triangle inequality.
 
