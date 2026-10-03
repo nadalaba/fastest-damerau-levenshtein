@@ -12,11 +12,27 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+
+      - uses: pnpm/setup@v3
         with:
-          node-version: 26
-          registry-url: https://registry.npmjs.org/
-      - run: npm publish --provenance --access public
+          version: 11
+          runtime: node@26
+          cache: true
+
+      - name: Build
+        run: pn build
+
+      - name: Lint
+        run: pn lint
+
+      - name: Test
+        run: pn test
+
+      - name: Format
+        run: pn format:check
+
+      - name: Publish to npmjs
+        run: pnpm publish --provenance --access public
 
   publish-gpr:
     runs-on: ubuntu-latest
@@ -25,12 +41,29 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+
+      - uses: pnpm/setup@v3
         with:
-          node-version: 26
-          registry-url: https://npm.pkg.github.com/
+          version: 11
+          runtime: node@26
+          cache: true
+
+      - name: Build
+        run: pn build
+
+      - name: Lint
+        run: pn lint
+
+      - name: Test
+        run: pn test
+
+      - name: Format
+        run: pn format:check
+
       - name: make package scoped
         run: npx -y change-package-name @${{ github.repository }}
-      - run: npm publish
+
+      - name: Publish to GitHub Packages registry
+        run: pnpm publish --registry https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
