@@ -61,10 +61,10 @@ jobs:
       - name: Format
         run: pn format:check
 
-      - name: make package scoped
-        run: npx -y change-package-name @${{ github.repository }}
+      - name: Configure .npmrc for GitHub Packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ./.npmrc
+          echo "@${{ github.repository_owner }}:registry=https://npm.pkg.github.com/" >> ./.npmrc
 
       - name: Publish to GitHub Packages registry
-        run: npm publish --registry https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: pnpm publish --no-git-checks
