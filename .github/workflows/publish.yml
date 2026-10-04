@@ -58,7 +58,7 @@ jobs:
         run: pn test
 
       - name: Make the Package Scoped
-        run: pn dlx -y change-package-name @${{ github.repository }}
+        run: jq --arg scopedName "@${{ github.repository }}" '.name = $scopedName' package.json > tmp.json && mv tmp.json package.json
 
       - name: Configure .npmrc for GitHub Packages
         run: |
