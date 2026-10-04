@@ -57,7 +57,7 @@
     "format": "oxfmt --write .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit && pn -r run typecheck",
-    "build:esm": "tsc --module esnext --declaration --sourceMap --outDir dist/esm",
+    "build:esm": "tsc --module esnext --declaration --outDir dist/esm",
     "build:cjs": "tsc --module commonjs --esModuleInterop --outDir dist/cjs",
     "build": "pn build:esm && pn build:cjs && pn -r run build",
     "test": "pn build:esm && cd dev && pn test",
