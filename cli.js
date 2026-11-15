@@ -17,19 +17,19 @@ for (let i = 0; i < args.length; i++) {
     arg = arg.slice(2);
     const equalsIndex = arg.indexOf("=");
     const option = equalsIndex > -1 ? arg.slice(0, equalsIndex) : arg;
-    if (possibleOptionsWithValue.has(option)) {
-      const optionValue = equalsIndex > -1 ? arg.slice(equalsIndex + 1) : args[i + 1];
+    const camelCasedOption = kebabCaseToCamelCase(option);
+    if (possibleOptionsWithValue.has(camelCasedOption)) {
+      const optionValue = equalsIndex > -1 ? arg.slice(equalsIndex + 1) : args[++i];
       if (optionValue === undefined || optionValue === "") {
         console.log(`ERROR: Option '--${option}' has no specified value.\n`);
         printUsage();
         process.exit(1);
       }
-      optionsWithValue[option] = optionValue;
-      if (equalsIndex === -1) i++;
-    } else if (possiblePrintFlags.has(option)) {
-      printFlags[option] = true;
-    } else if (possibleOtherFlags.has(option)) {
-      otherFlags[option] = true;
+      optionsWithValue[camelCasedOption] = optionValue;
+    } else if (possiblePrintFlags.has(camelCasedOption)) {
+      printFlags[camelCasedOption] = true;
+    } else if (possibleOtherFlags.has(camelCasedOption)) {
+      otherFlags[camelCasedOption] = true;
     } else {
       console.log(`ERROR: Unknown option '--${option}'.\n`);
       printUsage();
@@ -48,8 +48,7 @@ for (let i = 0; i < args.length; i++) {
             const equalsIndex = optionValue.indexOf("=");
             if (equalsIndex > -1) optionValue = optionValue.slice(equalsIndex + 1);
           } else {
-            optionValue = args[i + 1];
-            i++;
+            optionValue = args[++i];
           }
           if (optionValue === undefined || optionValue === "") {
             console.log(`ERROR: Option '-${option}' has no specified value.\n`);
@@ -101,7 +100,9 @@ if (optionsWithValue?.cutoff !== undefined) {
   }
   options.cutoff = parseFloat(optionsWithValue.cutoff);
 }
-if (otherFlags?.debug !== undefined) options.debug = otherFlags.debug;
+for (const flag in otherFlags) {
+  if (otherFlags[flag]) options[flag] = otherFlags[flag];
+}
 
 let result;
 if (strings.length < 2) {
@@ -125,9 +126,13 @@ for (const key of possiblePrintFlags) {
 }
 
 function formatKeyName(key) {
-  let name = key.replaceAll(/(?<![A-Z]|\s)[A-Z]/g, " $&");
+  let name = key.replace(/(?<![A-Z]|\s|^)[A-Z]/g, " $&");
   name = name.slice(0, 1).toUpperCase() + name.slice(1);
   return `${name.padEnd(16, " ")}:`;
+}
+
+function kebabCaseToCamelCase(flag) {
+  return flag.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase());
 }
 
 function printUsage() {
