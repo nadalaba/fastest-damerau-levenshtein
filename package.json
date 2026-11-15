@@ -58,9 +58,11 @@
     "lint": "oxlint",
     "typecheck": "tsc --noEmit && pn -r run typecheck",
     "build:esm": "tsc --module esnext --declaration --outDir dist/esm",
-    "build:cjs": "tsc --module commonjs --esModuleInterop --outDir dist/cjs",
+    "build:cjs": "tsc --module commonjs --esModuleInterop --outDir dist/cjs && pn generateCJS",
+    "generateCJS": "node -e \"require('fs').writeFileSync('dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "build": "pn build:esm && pn build:cjs && pn -r run build",
     "test": "pn build:esm && cd dev && pn test",
+    "smokeTest:cjs": "node -e \"process.exit(require('.').compare('fast', 'faster').distance === 2 ? 0 : 1)\"",
     "bench": "pn build:esm && cd dev && pn bench",
     "prepublishOnly": "pnpm run build"
   },

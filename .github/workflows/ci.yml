@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build-lint-test-format:
+  build-test-lint-format:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,12 +25,15 @@ jobs:
       - name: Build
         run: pn build
 
+      - name: Test
+        run: pn test
+
+      - name: Smoke Test - CJS
+        run: pn smokeTest:cjs
+
       - name: Lint
         if: ${{ matrix.node >= 20 }}
         run: pn lint
-
-      - name: Test
-        run: pn test
 
       - name: Format
         if: ${{ matrix.node >= 20 }}
