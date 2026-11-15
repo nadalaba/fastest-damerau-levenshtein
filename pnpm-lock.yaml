@@ -50,9 +50,6 @@ importers:
       '@nodeve/text':
         specifier: 2.2.0
         version: 2.2.0
-      '@types/benchmark':
-        specifier: 2.1.5
-        version: 2.1.5
       '@types/damerau-levenshtein':
         specifier: 1.0.2
         version: 1.0.2
@@ -446,9 +443,6 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
-
-  '@types/benchmark@2.1.5':
-    resolution: {integrity: sha512-cKio2eFB3v7qmKcvIHLUMw/dIx/8bhWPuzpzRT4unCPRTD8VdA9Zb0afxpcxOqR4PixRS7yT42FqGS8BYL8g1w==}
 
   '@types/damerau-levenshtein@1.0.2':
     resolution: {integrity: sha512-2IcR1RKFITuOO24yzurWAS3/2Lo7ptVDTCL+YkCa4Ir1ZjjEfqsJa3nRMhqf4hb+4AkE5nd6cRzqp9qpVvWSfw==}
@@ -1316,8 +1310,6 @@ snapshots:
 
   '@oxlint/binding-win32-x64-msvc@1.85.0':
     optional: true
-
-  '@types/benchmark@2.1.5': {}
 
   '@types/damerau-levenshtein@1.0.2': {}
 
