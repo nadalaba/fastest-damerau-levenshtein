@@ -5,7 +5,7 @@ import { compare, closest } from "./dist/esm/main.js";
 const args = process.argv.slice(2);
 
 const possiblePrintFlags = new Set(["distance", "similarity", "editSequence", "text", "index"]);
-const possibleOtherFlags = new Set(["debug", "noTrim", "noTrimEnd"]);
+const possibleOtherFlags = new Set(["noTrim", "noTrimEnd"]);
 const possibleOptionsWithValue = new Set(["cutoff"]);
 const printFlags = {};
 const otherFlags = {};
