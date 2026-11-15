@@ -69,14 +69,6 @@ for (let i = 0; i < args.length; i++) {
         }
       }
       if (parsedFlag) continue;
-      for (const oF of possibleOtherFlags) {
-        if (option === oF.slice(0, 1)) {
-          otherFlags[oF] = true;
-          parsedFlag = true;
-          break;
-        }
-      }
-      if (parsedFlag) continue;
       console.log(`ERROR: Unknown option '-${option}'.\n`);
       printUsage();
       process.exit(1);
