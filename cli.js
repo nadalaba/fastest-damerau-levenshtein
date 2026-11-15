@@ -146,8 +146,9 @@ function printUsage() {
   usage +=
     " ".repeat(4) +
     "-d, --distance".padEnd(24, " ") +
-    "print the distance between the compared strings, this is on by\n";
-  usage += " ".repeat(28) + "default if <s2> was a single string and no other flags were used\n";
+    "print the distance between the compared strings, this is on by\n" +
+    " ".repeat(28) +
+    "default if <s2> was a single string and no other flags were used\n";
   usage +=
     " ".repeat(4) +
     "-s, --similarity".padEnd(24, " ") +
@@ -159,12 +160,25 @@ function printUsage() {
   usage +=
     " ".repeat(4) +
     "-t, --text".padEnd(24, " ") +
-    "print the text of the closest string in <s2> to <s1>, this is on by\n";
-  usage += " ".repeat(28) + "default if <s2> was a list of strings and no other flags were used\n";
+    "print the text of the closest string in <s2> to <s1>, this is on by\n" +
+    " ".repeat(28) +
+    "default if <s2> was a list of strings and no other flags were used\n";
   usage +=
     " ".repeat(4) +
     "-i, --index".padEnd(24, " ") +
     "print the index of the closest string in <s2> to <s1>\n";
+  usage +=
+    " ".repeat(4) +
+    "--no-trim".padEnd(24, " ") +
+    "disable the prefix/suffix trimming optimization. May be slower, but\n" +
+    " ".repeat(28) +
+    "ensures a canonical edit sequence is produced.\n";
+  usage +=
+    " ".repeat(4) +
+    "--no-trim-end".padEnd(24, " ") +
+    "disable the suffix trimming optimization only. May be slower, but\n" +
+    " ".repeat(28) +
+    "ensures a canonical edit sequence is produced.\n";
 
   console.log(usage);
 }
