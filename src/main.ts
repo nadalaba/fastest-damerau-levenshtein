@@ -243,6 +243,7 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
 export type DistanceOptions = AlgOptions & {
   noSwap?: boolean;
   noTrim?: boolean;
+  noTrimEnd?: boolean;
   splitStr?: (str: string) => number[];
 };
 
@@ -300,13 +301,16 @@ export function compare<O extends DistanceOptions>(
   let prefixLen = 0;
   let suffixLen = 0;
   if (!options?.noTrim && !originalPatternSameAsPrevious) {
-    ({ prefixLen, suffixLen } = commonAffix(
-      pattern,
-      patternLen,
-      text,
-      textLen,
-      patternShoter ? patternLen : textLen,
-    ));
+    prefixLen = commonPrefix(pattern, text, patternShoter ? patternLen : textLen);
+    if (!options?.noTrimEnd) {
+      suffixLen = commonSuffix(
+        pattern,
+        text,
+        patternLen,
+        textLen,
+        patternShoter ? patternLen - prefixLen : textLen - prefixLen,
+      );
+    }
     patternLen -= prefixLen + suffixLen;
     textLen -= prefixLen + suffixLen;
     pattern = pattern.slice(prefixLen, patternLen + prefixLen);
@@ -481,21 +485,28 @@ export function closest<O extends DistanceOptions>(
   return { ...minResult, text, index } as ClosestResult<O>;
 }
 
-function commonAffix(
+function commonPrefix(
   s1: string[] | number[],
-  s1Len: number,
   s2: string[] | number[],
+  shorterLen: number,
+): number {
+  let prefixLen = 0;
+  while (prefixLen < shorterLen && s1[prefixLen] === s2[prefixLen]) prefixLen++;
+  return prefixLen;
+}
+
+function commonSuffix(
+  s1: string[] | number[],
+  s2: string[] | number[],
+  s1Len: number,
   s2Len: number,
   shorterLen: number,
-): { prefixLen: number; suffixLen: number } {
+): number {
   const s1End = s1Len - 1;
   const s2End = s2Len - 1;
-  let prefixLen = 0;
   let suffixLen = 0;
-  while (prefixLen < shorterLen && s1[prefixLen] === s2[prefixLen]) prefixLen++;
-  while (suffixLen < shorterLen - prefixLen && s1[s1End - suffixLen] === s2[s2End - suffixLen])
-    suffixLen++;
-  return { prefixLen, suffixLen };
+  while (suffixLen < shorterLen && s1[s1End - suffixLen] === s2[s2End - suffixLen]) suffixLen++;
+  return suffixLen;
 }
 
 function toCodePoints(str: string) {
