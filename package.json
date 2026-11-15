@@ -67,9 +67,9 @@
     "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
-    "oxfmt": "0.70.0",
-    "oxlint": "1.85.0",
-    "oxlint-tsgolint": "7.0.2002",
+    "oxfmt": "0.78.0",
+    "oxlint": "1.93.0",
+    "oxlint-tsgolint": "7.0.2007",
     "typescript": "7.0.2"
   }
 }
