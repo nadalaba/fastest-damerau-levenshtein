@@ -167,12 +167,18 @@ function printUsage() {
     " ".repeat(4) +
     "-i, --index".padEnd(24, " ") +
     "print the index of the closest string in <s2> to <s1>\n";
+  const url =
+    "https://github.com/nadalaba/fastest-damerau-levenshtein/blob/master/README.md#which-edit-sequence-is-returned";
+  const label = "README";
+  const hyperlink = `\u001B]8;;${url}\u0007${label}\u001B]8;;\u0007`;
   usage +=
     " ".repeat(4) +
     "--no-trim-end".padEnd(24, " ") +
     "disable the suffix trimming optimization. May be slower, but\n" +
     " ".repeat(28) +
-    "ensures a canonical edit sequence is produced.\n";
+    `ensures the deterministic edit sequence is produced. See ${hyperlink}\n` +
+    " ".repeat(28) +
+    "for more information.\n";
 
   console.log(usage);
 }

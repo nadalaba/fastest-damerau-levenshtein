@@ -16,6 +16,7 @@ The unrestricted Damerau-Levenshtein distance measures the minimum number of edi
 
 - [Features](#features)
 - [Installation](#installation)
+- [Quick Start](#quick-start)
 - [API](#api)
 - [CLI](#cli)
 - [Why Unrestricted Damerau-Levenshtein?](#why-unrestricted-damerau-levenshtein)
@@ -24,13 +25,13 @@ The unrestricted Damerau-Levenshtein distance measures the minimum number of edi
 
 ## Features
 
-- **Unrestricted Damerau-Levenshtein metric** - True metric distance (satisfies triangle inequality)
-- **Unicode support** - Correctly handles multi-byte characters (emoji counted as 1 character: `'🤣'` to `'😡'` = 1)
-- **ESM & CJS** - Works with both ES modules and CommonJS imports
-- **Distance & similarity** - Returns both raw distance and normalized similarity [0-1]
-- **Edit sequence** - Optionally outputs the sequence of edits to reconstruct one string from another
-- **Batch operations** - Fast closest-string selection from a list
-- **Zero dependencies** - Lightweight, fast implementation
+- **Unrestricted Damerau-Levenshtein metric**: True metric distance (satisfies triangle inequality)
+- **Unicode support**: Correctly handles multi-byte characters (distance from `'🤣'` to `'😡'` = 1)
+- **ESM & CJS**: Works with both ES modules and CommonJS imports
+- **Distance & similarity**: Returns both raw distance and normalized similarity [0-1]
+- **Edit sequence**: Optionally outputs the sequence of edits to reconstruct one string from another
+- **Batch operations**: Fast closest-string selection from a list
+- **Zero dependencies**: Lightweight, fast implementation
 
 ## Installation
 
@@ -44,25 +45,11 @@ or with pnpm:
 pnpm add fastest-damerau-levenshtein
 ```
 
-## API
+## Quick Start
 
-### `compare(pattern: string, text: string, options?: DistanceOptions)`
+The package supports both ES modules and CommonJS.
 
-Calculates the unrestricted Damerau-Levenshtein distance and similarity between two strings.
-
-**Returns:** `{ distance: number; similarity: number; editSequence?: string }`
-
-#### Basic Usage (CommonJS)
-
-```js
-const { compare } = require("fastest-damerau-levenshtein");
-
-const result = compare("fast", "faster");
-console.log(result);
-// => { distance: 2, similarity: 0.666666666666667 }
-```
-
-#### Basic Usage (ES Modules)
+**ES modules**
 
 ```js
 import { compare } from "fastest-damerau-levenshtein";
@@ -72,7 +59,69 @@ console.log(result);
 // => { distance: 2, similarity: 0.666666666666667 }
 ```
 
-#### With Edit Sequence
+**CommonJS**
+
+```js
+const { compare } = require("fastest-damerau-levenshtein");
+
+const result = compare("fast", "faster");
+console.log(result);
+// => { distance: 2, similarity: 0.666666666666667 }
+```
+
+## API
+
+### `compare(pattern: string, text: string, options?: DistanceOptions)`
+
+Calculates the unrestricted Damerau-Levenshtein distance and similarity between two strings.
+
+**Returns:** `{ distance: number; similarity: number; editSequence?: string }`
+
+```js
+import { compare } from "fastest-damerau-levenshtein";
+
+const result = compare("fast", "faster");
+console.log(result);
+// => { distance: 2, similarity: 0.666666666666667 }
+```
+
+### `closest(pattern: string, list: string[], options?: DistanceOptions)`
+
+Finds the string from the list with the lowest Damerau-Levenshtein distance from the pattern string. Optimized for batch comparisons.
+
+**Returns:** `{ text: string | null; index: number; distance: number; similarity: number; editSequence?: string }`
+
+```js
+import { closest } from "fastest-damerau-levenshtein";
+
+const result = closest("fast", ["slow", "faster", "fastest"]);
+console.log(result);
+// => { text: "faster", index: 1, distance: 2, similarity: 0.666666666666667 }
+```
+
+### `DistanceOptions`
+
+- `withEditSequence: boolean`: When `true`, the result includes an `editSequence` that transforms `pattern` into `text` (or, for `closest()`, the selected string), alongside the distance and similarity.
+- `cutoff: number`: Maximum distance to consider. If the distance exceeds it, `cutoff + 1` is returned as the distance and `0` as the similarity. With `closest()`, candidates beyond the cutoff are not selected; if none qualify, the result has `text: null` and `index: -1`.
+- `noTrimEnd: boolean`: Disables trimming of the common suffix before running the computation. This may be slower and can affect which edit sequence is returned. See [Which edit sequence is returned?](#which-edit-sequence-is-returned) for rationale.
+- `splitStr: (str: string) => number[]`: Custom function that converts each input string into an array of numeric symbols for comparison. By default, strings are split into Unicode code points. Use this option to compare different units, such as grapheme clusters; the distance and any edit sequence will then operate on those units.
+
+```js
+const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+const symbolIds = new Map();
+
+function splitGraphemes(str) {
+  return Array.from(segmenter.segment(str), ({ segment }) => {
+    if (!symbolIds.has(segment)) symbolIds.set(segment, symbolIds.size);
+    return symbolIds.get(segment);
+  });
+}
+
+compare("👨‍👩‍👧‍👦", "👨‍👩‍👧‍👦!", { splitStr: splitGraphemes });
+// => { distance: 1, similarity: 0.5 }
+```
+
+#### Edit Sequence
 
 The edit sequence is a string where each character represents an edit operation:
 
@@ -111,19 +160,11 @@ console.log(result);
 
 See [core.ts#`editString()`](/dev/src/test/core.ts#editString) for how to reconstruct a string from edit sequences.
 
-### `closest(pattern: string, list: string[], options?: DistanceOptions)`
+##### Which edit sequence is returned?
 
-Finds the string from the list with the lowest Damerau-Levenshtein distance from the pattern string. Optimized for batch comparisons.
+Different edit sequences can have the same minimum distance. This package returns one consistently: its **deterministic edit sequence**. When resolving equal-cost choices, it works backward from the end of the strings and prefers edit operations in this order: deletion (d), insertion (i), keep (e), transposition (t), then substitution (s). This choice affects the edit sequence, not the distance.
 
-**Returns:** `{ text: string | null; index: number; distance: number; similarity: number; editSequence?: string }`
-
-```js
-import { closest } from "fastest-damerau-levenshtein";
-
-const result = closest("fast", ["slow", "faster", "fastest"]);
-console.log(result);
-// => { text: "faster", index: 1, distance: 2, similarity: 0.666666666666667 }
-```
+By default, common suffixes are trimmed before the computation for performance, and represented as keeps (e) in the edit sequence. Trimming can affect which equal-cost edit sequence is selected. Use `noTrimEnd` to disable suffix trimming and ensure the deterministic edit sequence is produced.
 
 ## CLI
 
