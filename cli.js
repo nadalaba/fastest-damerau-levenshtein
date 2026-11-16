@@ -169,14 +169,8 @@ function printUsage() {
     "print the index of the closest string in <s2> to <s1>\n";
   usage +=
     " ".repeat(4) +
-    "--no-trim".padEnd(24, " ") +
-    "disable the prefix/suffix trimming optimization. May be slower, but\n" +
-    " ".repeat(28) +
-    "ensures a canonical edit sequence is produced.\n";
-  usage +=
-    " ".repeat(4) +
     "--no-trim-end".padEnd(24, " ") +
-    "disable the suffix trimming optimization only. May be slower, but\n" +
+    "disable the suffix trimming optimization. May be slower, but\n" +
     " ".repeat(28) +
     "ensures a canonical edit sequence is produced.\n";
 

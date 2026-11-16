@@ -3,7 +3,12 @@ import type { DistanceOptions, Lib } from "../types.ts";
 import { runDistanceTestCases, reportTestResult } from "./core.ts";
 import { basicTests, variationTests, getGeneratedTests } from "./distance-cases.ts";
 
-const fnVariants: { nameSuffix: string; options: DistanceOptions }[] = [
+type TestDistanceOptions = DistanceOptions & {
+  noSwap?: boolean;
+  noTrim?: boolean;
+};
+
+const fnVariants: { nameSuffix: string; options: TestDistanceOptions }[] = [
   { nameSuffix: "(noSwap)", options: { noSwap: true, withEditSequence: true } },
   { nameSuffix: "(noTrim)", options: { noTrim: true } },
   {

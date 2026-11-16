@@ -17,10 +17,12 @@ const peq = new Uint32Array(alphabetSize);
 let previousWordPattern: number[] = [];
 let previousPattern: number[] | string[] = [];
 
-type AlgOptions = { debug?: boolean; cutoff?: number; withEditSequence?: boolean };
+type AlgOptions = { cutoff?: number; withEditSequence?: boolean };
+type InternalAlgOptions = AlgOptions & { debug?: boolean };
 type AlgResult = { distance: number; edits?: Uint32Array };
 
 function algWord(text: number[], options?: AlgOptions): AlgResult {
+  const internalOptions = options as InternalAlgOptions | undefined;
   let j = 0; // for debug and edits only
   const m = previousWordPattern.length;
   const hMask = 1 << (m - 1);
@@ -30,7 +32,7 @@ function algWord(text: number[], options?: AlgOptions): AlgResult {
   let tt = 0 | 0;
   let tit = 0 | 0;
   const result: AlgResult = { distance: m, edits: undefined };
-  if (options?.debug) {
+  if (internalOptions?.debug) {
     mat[0] = [0];
     for (let i = 0; i < m; i++) {
       mat[i + 1] ??= [];
@@ -67,7 +69,7 @@ function algWord(text: number[], options?: AlgOptions): AlgResult {
       result.edits[baseIndex + 1] = ~tt | eq;
       result.edits[baseIndex + 2] = hpOld | vp;
     }
-    if (options?.debug) {
+    if (internalOptions?.debug) {
       mat[0][j + 1] = j + 1;
       for (let i = 0; i < m; i++) {
         mat[i + 1][j + 1] = mat[i][j + 1] + (vp & (1 << i) ? 1 : vm & (1 << i) ? -1 : 0);
@@ -79,6 +81,7 @@ function algWord(text: number[], options?: AlgOptions): AlgResult {
 }
 
 function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
+  const internalOptions = options as InternalAlgOptions | undefined;
   const m = preparedPattern.length;
   const words = preparedPattern.words;
   const lastTableRow = words << WORD_WIDTH_SHIFT;
@@ -99,7 +102,7 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
     vpBlocks[r] = -1;
   }
   const lastPatternBitMask = 1 << ((m - 1) & WORD_MASK);
-  if (options?.debug) {
+  if (internalOptions?.debug) {
     mat[0] = new Array(text.length + 1).fill(0).map((_, j) => j);
     for (let i = 0; i < lastTableRow; i++) mat[i + 1] ??= [];
     for (let i = 0; i < m; i++) {
@@ -211,7 +214,7 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
         result.edits[baseIndex + 2] = hpOld | vp;
       }
 
-      if (options?.debug) {
+      if (internalOptions?.debug) {
         for (let i = 0; i < WORD_WIDTH; i++) {
           const row = r * WORD_WIDTH + i;
           mat[row + 1][j + 1] =
@@ -240,19 +243,23 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
   return result;
 }
 
-export type DistanceOptions = AlgOptions & {
-  noSwap?: boolean;
-  noTrim?: boolean;
+type AdditionalDistanceOptions = {
   noTrimEnd?: boolean;
   splitStr?: (str: string) => number[];
 };
 
-export type CompareResultWithEditSequence = {
-  distance: number;
-  similarity: number;
+type InternalDistanceOptions = InternalAlgOptions &
+  AdditionalDistanceOptions & {
+    noSwap?: boolean;
+    noTrim?: boolean;
+  };
+
+export type DistanceOptions = AlgOptions & AdditionalDistanceOptions;
+
+type CompareResultNumeric = { distance: number; similarity: number };
+export type CompareResultWithEditSequence = CompareResultNumeric & {
   editSequence: string;
 };
-type CompareResultNumeric = { distance: number; similarity: number };
 
 export type CompareResult<O extends DistanceOptions> = O extends { withEditSequence: true }
   ? CompareResultWithEditSequence
@@ -263,6 +270,7 @@ export function compare<O extends DistanceOptions>(
   textStr: string,
   options?: O,
 ): CompareResult<O> {
+  const internalOptions = options as InternalDistanceOptions | undefined;
   const splitStr = options?.splitStr ?? toCodePoints;
   let pattern = splitStr(patternStr);
   let origPatternLen = pattern.length;
@@ -281,8 +289,7 @@ export function compare<O extends DistanceOptions>(
   let origTextLen = text.length;
   let textLen = origTextLen;
   let patternShoter = patternLen <= textLen;
-  if (options?.withEditSequence) options.noSwap = true;
-  if (!options?.noSwap && !patternShoter) {
+  if (!internalOptions?.noSwap && !options?.withEditSequence && !patternShoter) {
     [pattern, text] = [text, pattern];
     [patternLen, textLen] = [textLen, patternLen];
     [origPatternLen, origTextLen] = [origTextLen, origPatternLen];
@@ -300,7 +307,7 @@ export function compare<O extends DistanceOptions>(
   let trimmed = false;
   let prefixLen = 0;
   let suffixLen = 0;
-  if (!options?.noTrim && !originalPatternSameAsPrevious) {
+  if (!internalOptions?.noTrim && !originalPatternSameAsPrevious) {
     prefixLen = commonPrefix(pattern, text, patternShoter ? patternLen : textLen);
     if (!options?.noTrimEnd) {
       suffixLen = commonSuffix(
@@ -369,7 +376,7 @@ export function compare<O extends DistanceOptions>(
   const { distance, edits } = calculate(text, options);
   ret.distance = distance;
   ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
-  //if (options?.debug) console.log(toString(pattern, text, mat));
+  //if (internalOptions?.debug) console.log(toString(pattern, text, mat));
   if (options?.withEditSequence && "editSequence" in ret) {
     const sequence = [];
     /**
