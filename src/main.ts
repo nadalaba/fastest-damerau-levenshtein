@@ -243,24 +243,23 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
   return result;
 }
 
-type AdditionalDistanceOptions = {
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+type BaseDistanceOptions = {
   noTrimEnd?: boolean;
   splitStr?: (str: string) => number[];
 };
-
+export type DistanceOptions = AlgOptions & BaseDistanceOptions;
 type InternalDistanceOptions = InternalAlgOptions &
-  AdditionalDistanceOptions & {
+  BaseDistanceOptions & {
     noSwap?: boolean;
     noTrim?: boolean;
   };
-
-export type DistanceOptions = AlgOptions & AdditionalDistanceOptions;
 
 type CompareResultNumeric = { distance: number; similarity: number };
 export type CompareResultWithEditSequence = CompareResultNumeric & {
   editSequence: string;
 };
-
 export type CompareResult<O extends DistanceOptions> = O extends { withEditSequence: true }
   ? CompareResultWithEditSequence
   : CompareResultNumeric;
@@ -275,16 +274,23 @@ export function compare<O extends DistanceOptions>(
   let pattern = splitStr(patternStr);
   let origPatternLen = pattern.length;
   let patternLen = origPatternLen;
-  let ret: CompareResultNumeric | CompareResultWithEditSequence = options?.withEditSequence
-    ? { distance: 0, similarity: 1, editSequence: "e".repeat(origPatternLen) }
+
+  // early return (same string & cutoff < 1)
+  let ret: MakeOptional<CompareResultWithEditSequence, "editSequence"> = options?.withEditSequence
+    ? { distance: 0, similarity: 1, editSequence: "" }
     : { distance: 0, similarity: 1 };
-  if (patternStr === textStr) return ret as CompareResult<O>;
+  if (patternStr === textStr) {
+    if (options?.withEditSequence) ret.editSequence = "e".repeat(origPatternLen);
+    return ret as CompareResult<O>;
+  }
   if (options?.cutoff !== undefined && options?.cutoff < 1) {
     ret.distance = options?.cutoff + 1;
     ret.similarity = 0;
-    if (options?.withEditSequence && "editSequence" in ret) ret.editSequence = "";
+    if (options?.withEditSequence) ret.editSequence = "";
     return ret as CompareResult<O>;
   }
+
+  // swap
   let text = splitStr(textStr);
   let origTextLen = text.length;
   let textLen = origTextLen;
@@ -295,6 +301,8 @@ export function compare<O extends DistanceOptions>(
     [origPatternLen, origTextLen] = [origTextLen, origPatternLen];
     patternShoter = true;
   }
+
+  // trim
   let originalPatternSameAsPrevious = false;
   let calculate;
   if (patternLen > WORD_WIDTH) {
@@ -324,37 +332,26 @@ export function compare<O extends DistanceOptions>(
     text = text.slice(prefixLen, textLen + prefixLen);
     if (prefixLen > 0 || suffixLen > 0) trimmed = true;
   }
-  if (patternLen === 0) {
-    ret.distance = textLen;
+
+  // return if trimmed string's length became zero
+  if (patternLen === 0 || textLen === 0) {
+    ret.distance = patternLen + textLen;
     ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
-    if (options?.withEditSequence && "editSequence" in ret) {
-      ret.editSequence = "e".repeat(prefixLen) + "i".repeat(textLen) + "e".repeat(suffixLen);
+    if (options?.withEditSequence) {
+      ret.editSequence =
+        "e".repeat(prefixLen) +
+        (patternLen === 0 ? "i" : "d").repeat(ret.distance) +
+        "e".repeat(suffixLen);
     }
     if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
       ret.distance = options.cutoff + 1;
       ret.similarity = 0;
-      if (options?.withEditSequence && "editSequence" in ret) {
-        ret.editSequence = "";
-      }
-    }
-    return ret as CompareResult<O>;
-  }
-  if (textLen === 0) {
-    ret.distance = patternLen;
-    ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
-    if (options?.withEditSequence && "editSequence" in ret) {
-      ret.editSequence = "e".repeat(prefixLen) + "d".repeat(patternLen) + "e".repeat(suffixLen);
-    }
-    if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
-      ret.distance = options.cutoff + 1;
-      ret.similarity = 0;
-      if (options?.withEditSequence && "editSequence" in ret) {
-        ret.editSequence = "";
-      }
+      if (options?.withEditSequence) ret.editSequence = "";
     }
     return ret as CompareResult<O>;
   }
 
+  // prepare pattern
   if (trimmed || !originalPatternSameAsPrevious) {
     if (patternLen > WORD_WIDTH) {
       if (!trimmed || !compareArrayElements(pattern, previousPattern)) {
@@ -377,7 +374,10 @@ export function compare<O extends DistanceOptions>(
   ret.distance = distance;
   ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
   //if (internalOptions?.debug) console.log(toString(pattern, text, mat));
-  if (options?.withEditSequence && "editSequence" in ret) {
+
+  const hitCutoff = options?.cutoff !== undefined && distance > options?.cutoff;
+
+  if (options?.withEditSequence && !hitCutoff) {
     const sequence = [];
     /**
      * 000 tit
@@ -450,16 +450,12 @@ export function compare<O extends DistanceOptions>(
       sequence.push("d");
       decrementI();
     }
-    const editSequence =
-      "e".repeat(prefixLen) + sequence.reverse().join("") + "e".repeat(suffixLen);
-    ret.editSequence = editSequence;
+    ret.editSequence = "e".repeat(prefixLen) + sequence.reverse().join("") + "e".repeat(suffixLen);
   }
-  if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
-    ret.distance = options.cutoff + 1;
+  if (hitCutoff) {
+    ret.distance = options.cutoff! + 1;
     ret.similarity = 0;
-    if (options?.withEditSequence && "editSequence" in ret) {
-      ret.editSequence = "";
-    }
+    if (options?.withEditSequence) ret.editSequence = "";
   }
   return ret as CompareResult<O>;
 }
