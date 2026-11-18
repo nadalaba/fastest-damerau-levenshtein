@@ -370,93 +370,28 @@ export function compare<O extends DistanceOptions>(
     }
   }
 
+  // calculate
   const { distance, edits } = calculate(text, options);
-  ret.distance = distance;
-  ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
   //if (internalOptions?.debug) console.log(toString(pattern, text, mat));
 
-  const hitCutoff = options?.cutoff !== undefined && distance > options?.cutoff;
-
-  if (options?.withEditSequence && !hitCutoff) {
-    const sequence = [];
-    /**
-     * 000 tit
-     * 001 tdt
-     * 010 s
-     * 011 e
-     * 1x0 i
-     * 1x1 d
-     */
-    const words = patternLen > WORD_WIDTH ? preparedPattern.words : 1;
-    let i = (patternLen - 1) & WORD_MASK,
-      j = textLen - 1,
-      r = words - 1;
-    const decrementI = () => {
-      if (--i < 0) {
-        i = 31;
-        r--;
-      }
-    };
-    let push = true;
-    while (r >= 0 && j >= 0) {
-      let baseIndex = (j * words + r) * 3;
-      let a = edits?.[baseIndex] ?? 0;
-      let b = edits?.[baseIndex + 1] ?? 0;
-      let c = edits?.[baseIndex + 2] ?? 0;
-      if (((c >> i) & 1) !== 0) {
-        if (((a >> i) & 1) !== 0) {
-          if (push) sequence.push("d");
-          decrementI();
-        } else {
-          if (push) sequence.push("i");
-          j--;
-        }
-        if (!push) push = true;
-      } else {
-        if (((b >> i) & 1) !== 0) {
-          if (((a >> i) & 1) !== 0 && push) sequence.push("e");
-          else if (push) sequence.push("s");
-          decrementI();
-          j--;
-          if (!push) push = true;
-        } else {
-          if (((a >> i) & 1) !== 0) {
-            sequence.push("t");
-            decrementI();
-            const textChar = text[j];
-            while (pattern[r * WORD_WIDTH + i] !== textChar) {
-              sequence.push("d");
-              decrementI();
-            }
-            j--;
-            sequence.push("t");
-          } else {
-            sequence.push("t");
-            j--;
-            const patternChar = pattern[r * WORD_WIDTH + i];
-            while (patternChar !== text[j]) {
-              sequence.push("i");
-              j--;
-            }
-            decrementI();
-            sequence.push("t");
-          }
-          push = false;
-        }
-      }
-    }
-    while (j-- > -1) sequence.push("i");
-    while (r > -1) {
-      sequence.push("d");
-      decrementI();
-    }
-    ret.editSequence = "e".repeat(prefixLen) + sequence.reverse().join("") + "e".repeat(suffixLen);
-  }
-  if (hitCutoff) {
+  // check cutoff
+  if (options?.cutoff !== undefined && distance > options?.cutoff) {
     ret.distance = options.cutoff! + 1;
     ret.similarity = 0;
     if (options?.withEditSequence) ret.editSequence = "";
+  } else {
+    ret.distance = distance;
+    ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
+
+    // create edit sequence if requested
+    if (options?.withEditSequence) {
+      ret.editSequence =
+        "e".repeat(prefixLen) +
+        createEditSequenceFromEdits(pattern, text, patternLen, textLen, edits!) +
+        "e".repeat(suffixLen);
+    }
   }
+
   return ret as CompareResult<O>;
 }
 
@@ -538,4 +473,87 @@ function compareArrayElements(arr1: string[] | number[], arr2: string[] | number
     if (arr1[i] !== arr2[i]) return false;
   }
   return true;
+}
+
+function createEditSequenceFromEdits(
+  pattern: number[],
+  text: number[],
+  patternLen: number,
+  textLen: number,
+  edits: Uint32Array,
+): string {
+  const sequence = [];
+  /**
+   * 000 tit
+   * 001 tdt
+   * 010 s
+   * 011 e
+   * 1x0 i
+   * 1x1 d
+   */
+  const words = patternLen > WORD_WIDTH ? preparedPattern.words : 1;
+  let i = (patternLen - 1) & WORD_MASK,
+    j = textLen - 1,
+    r = words - 1;
+  const decrementI = () => {
+    if (--i < 0) {
+      i = 31;
+      r--;
+    }
+  };
+  let push = true;
+  while (r >= 0 && j >= 0) {
+    let baseIndex = (j * words + r) * 3;
+    let a = edits[baseIndex];
+    let b = edits[baseIndex + 1];
+    let c = edits[baseIndex + 2];
+    if (((c >> i) & 1) !== 0) {
+      if (((a >> i) & 1) !== 0) {
+        if (push) sequence.push("d");
+        decrementI();
+      } else {
+        if (push) sequence.push("i");
+        j--;
+      }
+      if (!push) push = true;
+    } else {
+      if (((b >> i) & 1) !== 0) {
+        if (((a >> i) & 1) !== 0 && push) sequence.push("e");
+        else if (push) sequence.push("s");
+        decrementI();
+        j--;
+        if (!push) push = true;
+      } else {
+        if (((a >> i) & 1) !== 0) {
+          sequence.push("t");
+          decrementI();
+          const textChar = text[j];
+          while (pattern[r * WORD_WIDTH + i] !== textChar) {
+            sequence.push("d");
+            decrementI();
+          }
+          j--;
+          sequence.push("t");
+        } else {
+          sequence.push("t");
+          j--;
+          const patternChar = pattern[r * WORD_WIDTH + i];
+          while (patternChar !== text[j]) {
+            sequence.push("i");
+            j--;
+          }
+          decrementI();
+          sequence.push("t");
+        }
+        push = false;
+      }
+    }
+  }
+  while (j-- > -1) sequence.push("i");
+  while (r > -1) {
+    sequence.push("d");
+    decrementI();
+  }
+
+  return sequence.reverse().join("");
 }
