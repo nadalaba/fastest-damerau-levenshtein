@@ -128,8 +128,9 @@ The edit sequence is a string where each character represents an edit operation:
 - `i` = insertion
 - `d` = deletion
 - `s` = substitution
-- `t` = transposition
 - `e` = keep character as-is
+- `\` = transposition-start
+- `/` = transposition-end
 
 ```js
 const result = compare("abc", "ca", { withEditSequence: true });
@@ -162,7 +163,7 @@ See [core.ts#`editString()`](/dev/src/test/core.ts#editString) for how to recons
 
 ##### Which edit sequence is returned?
 
-Different edit sequences can have the same minimum distance. This package returns one consistently: its **deterministic edit sequence**. When resolving equal-cost choices, it works backward from the end of the strings and prefers edit operations in this order: deletion (d), insertion (i), keep (e), transposition (t), then substitution (s). This choice affects the edit sequence, not the distance.
+Different edit sequences can have the same minimum distance. This package returns one consistently: its **deterministic edit sequence**. When resolving equal-cost choices, it works backward from the end of the strings and prefers edit operations in this order: deletion (d), insertion (i), keep (e), transposition (\\) or (/), then substitution (s). This choice affects the edit sequence, not the distance.
 
 By default, common suffixes are trimmed before the computation for performance, and represented as keeps (e) in the edit sequence. Trimming can affect which equal-cost edit sequence is selected. Use `noTrimEnd` to disable suffix trimming and ensure the deterministic edit sequence is produced.
 

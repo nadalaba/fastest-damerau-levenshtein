@@ -24,8 +24,8 @@ export function pad(
 }
 
 export function countOccurrences(str: string, sub: string): number {
-  let count = 0,
-    pos = 0;
+  let count = 0;
+  let pos = 0;
   while ((pos = str.indexOf(sub, pos)) !== -1) {
     count++;
     pos += sub.length;

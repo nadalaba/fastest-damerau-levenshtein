@@ -48,19 +48,17 @@ function editString(
     } else if (edit === "s") editedS1Arr[i++] = s2Arr[j++];
     else if (edit === "d") editedS1Arr.splice(i, 1);
     else if (edit === "i") editedS1Arr.splice(i++, 0, s2Arr[j++].toString());
-    else if (edit === "t") {
-      if (firstTranspose === null) {
-        firstTranspose = i;
-        i++;
-        j++;
-      } else {
-        const firstSymbol = editedS1Arr[firstTranspose];
-        editedS1Arr[firstTranspose] = editedS1Arr[i];
-        editedS1Arr[i] = firstSymbol;
-        i++;
-        j++;
-        firstTranspose = null;
-      }
+    else if (edit === "\\") {
+      firstTranspose = i;
+      i++;
+      j++;
+    } else if (edit === "/" && firstTranspose !== null) {
+      const firstSymbol = editedS1Arr[firstTranspose];
+      editedS1Arr[firstTranspose] = editedS1Arr[i];
+      editedS1Arr[i] = firstSymbol;
+      i++;
+      j++;
+      firstTranspose = null;
     }
   }
   const isNumberArray = (value: unknown): value is number[] =>
@@ -70,6 +68,31 @@ function editString(
   } else {
     return editedS1Arr.join("");
   }
+}
+
+function checkTranspositions(editSequence: string): string[] {
+  let expected: "\\" | "/" = "\\";
+  let gotTranspositions = false;
+
+  const problems: string[] = [];
+  for (let i = 0; i < editSequence.length; i++) {
+    const edit = editSequence[i];
+
+    if (edit === "\\" || edit === "/") {
+      if (edit !== expected) {
+        if (!gotTranspositions) problems.push("first transposition is a transposition-end (/)");
+        problems.push(`transpositions have 2 successive ${edit} at position ${i}`);
+      }
+
+      if (edit === "\\") expected = "/";
+      else expected = "\\";
+
+      if (!gotTranspositions) gotTranspositions = true;
+    }
+  }
+  if (expected !== "\\") problems.push("last transposition is a transposition-start (\\)");
+
+  return problems;
 }
 
 function runDistanceTestCase(
@@ -225,25 +248,26 @@ function runDistanceTestCase(
             });
           }
           if (dir.measured.editSequence !== "") {
-            const transpositionsCount = countOccurrences(dir.measured.editSequence, "t");
-            if (transpositionsCount % 2 !== 0) {
+            const transpositionIssues = checkTranspositions(dir.measured.editSequence);
+            for (const tIssue of transpositionIssues) {
               problems.push({
                 args: dir.args,
                 options: opts,
-                expected: `an edit sequence that has an even transposition count`,
-                measured: `transposition count of ${transpositionsCount}`,
+                expected:
+                  "an edit sequence which ends every transposition-start (\\) with a transposition-end (/)",
+                measured: `an edit sequence whose ${tIssue}: ${dir.measured.editSequence}`,
               });
             }
             const editSequenceDistance =
               dir.measured.editSequence.length -
               countOccurrences(dir.measured.editSequence, "e") -
-              transpositionsCount / 2;
+              countOccurrences(dir.measured.editSequence, "/");
             if (dir.measured.distance !== editSequenceDistance) {
               problems.push({
                 args: dir.args,
                 options: opts,
-                expected: `an edit sequence that has a distance of ${dir.measured.distance}`,
-                measured: `an edit sequence ${dir.measured.editSequence} that has a distance of ${editSequenceDistance}`,
+                expected: `an edit sequence that has a cost of ${dir.measured.distance}`,
+                measured: `an edit sequence ${dir.measured.editSequence} that has a cost of ${editSequenceDistance}`,
               });
             }
           }
