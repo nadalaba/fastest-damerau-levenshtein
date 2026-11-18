@@ -117,8 +117,8 @@ function splitGraphemes(str) {
   });
 }
 
-compare("👨‍👩‍👧‍👦", "👨‍👩‍👧‍👦!", { splitStr: splitGraphemes });
-// => { distance: 1, similarity: 0.5 }
+compare("👨‍👩‍👧‍👦", "x", { splitStr: splitGraphemes }).distance;
+// => 1
 ```
 
 #### Edit Sequence
