@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   runtime-test:
+    name: runtime-test (${{ matrix.runtime }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -33,7 +34,7 @@ jobs:
           pn -r run build
 
       - name: Test
-        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dist/test/main.js
+        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dev/dist/test/main.js
 
       - name: Smoke Test - ESM
         run: ${{ matrix.runtime }} run dev/src/test/smoke-test.mjs
