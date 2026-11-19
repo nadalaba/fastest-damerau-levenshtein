@@ -117,7 +117,8 @@ function splitGraphemes(str) {
   });
 }
 
-compare("👨‍👩‍👧‍👦", "x", { splitStr: splitGraphemes }).distance;
+const distance = compare("👨‍👩‍👧‍👦", "x", { splitStr: splitGraphemes }).distance;
+console.log(distance)
 // => 1
 ```
 
@@ -138,10 +139,10 @@ console.log(result);
 // => {
 //   distance: 2,
 //   similarity: 0.333333333333333,
-//   editSequence: "tdt"
+//   editSequence: "\\d/"
 // }
 
-// Explanation: delete 'b', transpose 'a' and 'c'
+// Explanation: delete 'b' (d), transpose 'a' and 'c' (\)-(/)
 ```
 
 Another example:
@@ -155,8 +156,8 @@ console.log(result);
 //   editSequence: "seeesei"
 // }
 
-// Explanation: substitute 'k' -> 's', keep 'itt',
-//  substitute 'e' -> 'i', keep 'n', insert 'g'
+// Explanation: substitute 'k' -> 's' (s), keep 'itt' (eee),
+//  substitute 'e' -> 'i' (s), keep 'n' (e), insert 'g' (i)
 ```
 
 See [core.ts#`editString()`](/dev/src/test/core.ts#editString) for how to reconstruct a string from edit sequences.
