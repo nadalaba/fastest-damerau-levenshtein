@@ -118,7 +118,7 @@ function splitGraphemes(str) {
 }
 
 const distance = compare("👨‍👩‍👧‍👦", "x", { splitStr: splitGraphemes }).distance;
-console.log(distance)
+console.log(distance);
 // => 1
 ```
 
