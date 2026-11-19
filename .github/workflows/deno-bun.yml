@@ -40,4 +40,4 @@ jobs:
         run: ${{ matrix.runtime }} run dev/src/test/smoke-test.mjs
 
       - name: Smoke Test - CJS
-        run: ${{ matrix.runtime }} run dev/src/test/smoke-test.cjs
+        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dev/src/test/smoke-test.cjs
