@@ -6,10 +6,10 @@
 [![License](https://img.shields.io/npm/l/fastest-damerau-levenshtein)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
 [![CI](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml/badge.svg)](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml)
-[![Bun](https://img.shields.io/badge/Bun-compatible-f9f1e1?logo=bun)](https://bun.sh/)
-[![Deno](https://img.shields.io/badge/Deno-compatible-70ffaf?logo=deno)](https://deno.com/)
 ![ESM](https://img.shields.io/badge/ESM-supported-blue)
 ![CJS](https://img.shields.io/badge/CJS-supported-green)
+[![Deno](https://img.shields.io/badge/Deno-compatible-70ffaf?logo=deno)](https://deno.com/)
+[![Bun](https://img.shields.io/badge/Bun-compatible-f9f1e1?logo=bun)](https://bun.sh/)
 [![Bundle size](https://img.shields.io/bundlejs/size/fastest-damerau-levenshtein)](https://bundlephobia.com/package/fastest-damerau-levenshtein)
 
 The unrestricted Damerau-Levenshtein distance measures the minimum number of edits (insertion, deletion, substitution, and transposition) needed to transform one string into another. Unlike the restricted variant (Optimal String Alignment), the unrestricted form is a true metric that satisfies the triangle inequality.
