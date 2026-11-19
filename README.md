@@ -30,6 +30,7 @@ The unrestricted Damerau-Levenshtein distance measures the minimum number of edi
 - **Unrestricted Damerau-Levenshtein metric**: True metric distance (satisfies triangle inequality)
 - **Unicode support**: Correctly handles multi-byte characters (distance from `'🤣'` to `'😡'` = 1)
 - **ESM & CJS**: Works with both ES modules and CommonJS imports
+- **Bun & Deno**: Compatible with Bun and Deno runtimes
 - **Distance & similarity**: Returns both raw distance and normalized similarity [0-1]
 - **Edit sequence**: Optionally outputs the sequence of edits to reconstruct one string from another
 - **Batch operations**: Fast closest-string selection from a list
