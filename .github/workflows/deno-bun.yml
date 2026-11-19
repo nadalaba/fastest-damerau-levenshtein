@@ -1,0 +1,42 @@
+name: Deno-Bun
+
+on: [push, pull_request]
+
+jobs:
+  runtime-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: deno
+            read-flags: "--allow-read"
+            write-flags: "--allow-write"
+          - runtime: bun
+            read-flags: ""
+            write-flags: ""
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+        with:
+          version: 11
+          runtime: ${{ matrix.runtime }}
+          cache: true
+
+      - name: Build
+        run: |
+          pn build:esm 
+          pn build:cjs
+          ${{ matrix.runtime }} run ${{ matrix.write-flags }} scripts/generate-cjs-package.mjs
+          pn -r run build
+
+      - name: Test
+        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dist/test/main.js
+
+      - name: Smoke Test - ESM
+        run: ${{ matrix.runtime }} run dev/src/test/smoke-test.mjs
+
+      - name: Smoke Test - CJS
+        run: ${{ matrix.runtime }} run dev/src/test/smoke-test.cjs
