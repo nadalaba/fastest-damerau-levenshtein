@@ -5,7 +5,9 @@
 [![npm version](https://img.shields.io/npm/v/fastest-damerau-levenshtein)](https://www.npmjs.com/package/fastest-damerau-levenshtein)
 [![License](https://img.shields.io/npm/l/fastest-damerau-levenshtein)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
-[![CI](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml/badge.svg)](https://github.com/nadalaba/fastest-damerau-levenshtein/actions)
+[![CI](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml/badge.svg)](https://github.com/nadalaba/fastest-damerau-levenshtein/actions/workflows/ci.yml)
+[![Bun](https://img.shields.io/badge/Bun-compatible-f9f1e1?logo=bun)](https://bun.sh/)
+[![Deno](https://img.shields.io/badge/Deno-compatible-70ffaf?logo=deno)](https://deno.com/)
 ![ESM](https://img.shields.io/badge/ESM-supported-blue)
 ![CJS](https://img.shields.io/badge/CJS-supported-green)
 [![Bundle size](https://img.shields.io/bundlejs/size/fastest-damerau-levenshtein)](https://bundlephobia.com/package/fastest-damerau-levenshtein)
@@ -28,6 +30,7 @@ The unrestricted Damerau-Levenshtein distance measures the minimum number of edi
 - **Unrestricted Damerau-Levenshtein metric**: True metric distance (satisfies triangle inequality)
 - **Unicode support**: Correctly handles multi-byte characters (distance from `'🤣'` to `'😡'` = 1)
 - **ESM & CJS**: Works with both ES modules and CommonJS imports
+- **Bun & Deno**: Compatible with Bun and Deno runtimes
 - **Distance & similarity**: Returns both raw distance and normalized similarity [0-1]
 - **Edit sequence**: Optionally outputs the sequence of edits to reconstruct one string from another
 - **Batch operations**: Fast closest-string selection from a list
