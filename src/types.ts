@@ -15,7 +15,14 @@ export type InternalDistanceOptions = InternalAlgOptions &
     noTrim?: boolean;
   };
 
-export type CompareResultNumeric = { distance: number; similarity: number };
+export type GetDistanceResult = AlgResult & {
+  pattern: Uint32Array;
+  text: Uint32Array;
+  prefixLen: number;
+  suffixLen: number;
+};
+
+type CompareResultNumeric = { distance: number; similarity: number };
 export type CompareResultWithEditSequence = CompareResultNumeric & {
   editSequence: string;
 };
