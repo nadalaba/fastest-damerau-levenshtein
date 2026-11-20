@@ -7,6 +7,7 @@ import {
   preparePattern,
   zeroPreparedPattern,
 } from "./pattern.ts";
+import * as Util from "./util.ts";
 
 const alphabetSize = 0x110000;
 const peq = new Uint32Array(alphabetSize);
@@ -265,7 +266,7 @@ export function compare<O extends DistanceOptions>(
   options?: O,
 ): CompareResult<O> {
   const internalOptions = options as InternalDistanceOptions | undefined;
-  const splitStr = options?.splitStr ?? toCodePoints;
+  const splitStr = options?.splitStr ?? Util.toCodePoints;
   let pattern = splitStr(patternStr);
 
   // early return (same string & cutoff < 1)
@@ -295,10 +296,10 @@ export function compare<O extends DistanceOptions>(
   let originalPatternSameAsPrevious = false;
   let calculate;
   if (pattern.length > WORD_WIDTH) {
-    originalPatternSameAsPrevious = compareArrayElements(pattern, previousPattern);
+    originalPatternSameAsPrevious = Util.compareArrayElements(pattern, previousPattern);
     calculate = algX;
   } else {
-    originalPatternSameAsPrevious = compareArrayElements(pattern, previousWordPattern);
+    originalPatternSameAsPrevious = Util.compareArrayElements(pattern, previousWordPattern);
     calculate = algWord;
   }
 
@@ -309,9 +310,9 @@ export function compare<O extends DistanceOptions>(
   if (!internalOptions?.noTrim && !originalPatternSameAsPrevious) {
     const shorterString = patternShorter ? pattern.length : text.length;
 
-    prefixLen = commonPrefix(pattern, text, shorterString);
+    prefixLen = Util.commonPrefix(pattern, text, shorterString);
     if (!options?.noTrimEnd) {
-      suffixLen = commonSuffix(pattern, text, shorterString - prefixLen);
+      suffixLen = Util.commonSuffix(pattern, text, shorterString - prefixLen);
     }
     pattern = pattern.subarray(prefixLen, pattern.length - suffixLen);
     text = text.subarray(prefixLen, text.length - suffixLen);
@@ -340,14 +341,14 @@ export function compare<O extends DistanceOptions>(
   // prepare pattern
   if (trimmed || !originalPatternSameAsPrevious) {
     if (pattern.length > WORD_WIDTH) {
-      if (!trimmed || !compareArrayElements(pattern, previousPattern)) {
+      if (!trimmed || !Util.compareArrayElements(pattern, previousPattern)) {
         if (previousPattern.length !== 0) zeroPreparedPattern(previousPattern);
         preparePattern(pattern);
         previousPattern = pattern;
       }
       calculate = algX;
     } else {
-      if (!trimmed || !compareArrayElements(pattern, previousWordPattern)) {
+      if (!trimmed || !Util.compareArrayElements(pattern, previousWordPattern)) {
         if (previousWordPattern.length !== 0) for (const cp of previousWordPattern) peq[cp] = 0;
         for (const [i, cp] of pattern.entries()) peq[cp] |= 1 << i;
         previousWordPattern = pattern;
@@ -408,48 +409,6 @@ export function closest<O extends DistanceOptions>(
     }
   }
   return { ...minResult, text, index } as ClosestResult<O>;
-}
-
-function commonPrefix(s1: Uint32Array, s2: Uint32Array, shorterLen: number): number {
-  let prefixLen = 0;
-  while (prefixLen < shorterLen && s1[prefixLen] === s2[prefixLen]) prefixLen++;
-  return prefixLen;
-}
-
-function commonSuffix(s1: Uint32Array, s2: Uint32Array, shorterLen: number): number {
-  const s1End = s1.length - 1;
-  const s2End = s2.length - 1;
-  let suffixLen = 0;
-  while (suffixLen < shorterLen && s1[s1End - suffixLen] === s2[s2End - suffixLen]) suffixLen++;
-  return suffixLen;
-}
-
-export function toCodePoints(str: string): Uint32Array {
-  const length = str.length;
-  const output = new Uint32Array(length);
-  let size = 0;
-  for (let index = 0; index < length; index++) {
-    const high = str.charCodeAt(index);
-    if (high >= 0xd800 && high <= 0xdbff && index + 1 < length) {
-      const low = str.charCodeAt(index + 1);
-      if (low >= 0xdc00 && low <= 0xdfff) {
-        output[size++] = (high - 0xd800) * 1024 + (low - 0xdc00) + 0x10000;
-        index++;
-      }
-    } else {
-      output[size++] = high;
-    }
-  }
-  return output.subarray(0, size);
-}
-
-function compareArrayElements(arr1: Uint32Array, arr2: Uint32Array): boolean {
-  const arr1Len = arr1.length;
-  if (arr1Len !== arr2.length) return false;
-  for (let i = 0; i < arr1Len; i++) {
-    if (arr1[i] !== arr2[i]) return false;
-  }
-  return true;
 }
 
 function createEditSequenceFromEdits(

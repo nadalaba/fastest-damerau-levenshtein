@@ -12,7 +12,7 @@ import type {
   Problem,
   TestRunSummary,
 } from "../types";
-import { toCodePoints } from "fastest-damerau-levenshtein";
+import { toCodePoints } from "../../../dist/esm/util.js";
 
 const red = "\x1b[31m";
 const green = "\x1b[32m";
