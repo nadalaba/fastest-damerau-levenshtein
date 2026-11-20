@@ -525,7 +525,7 @@ function createEditSequenceFromEdits(
         if (!push) push = true;
       } else {
         if (((a >> i) & 1) !== 0) {
-          sequence.push("/");
+          sequence.push("T");
           decrementI();
           const textChar = text[j];
           while (pattern[r * WORD_WIDTH + i] !== textChar) {
@@ -533,9 +533,9 @@ function createEditSequenceFromEdits(
             decrementI();
           }
           j--;
-          sequence.push("\\");
+          sequence.push("t");
         } else {
-          sequence.push("/");
+          sequence.push("T");
           j--;
           const patternChar = pattern[r * WORD_WIDTH + i];
           while (patternChar !== text[j]) {
@@ -543,7 +543,7 @@ function createEditSequenceFromEdits(
             j--;
           }
           decrementI();
-          sequence.push("\\");
+          sequence.push("t");
         }
         push = false;
       }

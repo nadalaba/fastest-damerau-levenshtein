@@ -48,11 +48,11 @@ function editString(
     } else if (edit === "s") editedS1Arr[i++] = s2Arr[j++];
     else if (edit === "d") editedS1Arr.splice(i, 1);
     else if (edit === "i") editedS1Arr.splice(i++, 0, s2Arr[j++].toString());
-    else if (edit === "\\") {
+    else if (edit === "t") {
       firstTranspose = i;
       i++;
       j++;
-    } else if (edit === "/" && firstTranspose !== null) {
+    } else if (edit === "T" && firstTranspose !== null) {
       const firstSymbol = editedS1Arr[firstTranspose];
       editedS1Arr[firstTranspose] = editedS1Arr[i];
       editedS1Arr[i] = firstSymbol;
@@ -71,26 +71,26 @@ function editString(
 }
 
 function checkTranspositions(editSequence: string): string[] {
-  let expected: "\\" | "/" = "\\";
+  let expected: "t" | "T" = "t";
   let gotTranspositions = false;
 
   const problems: string[] = [];
   for (let i = 0; i < editSequence.length; i++) {
     const edit = editSequence[i];
 
-    if (edit === "\\" || edit === "/") {
+    if (edit === "t" || edit === "T") {
       if (edit !== expected) {
-        if (!gotTranspositions) problems.push("first transposition is a transposition-end (/)");
+        if (!gotTranspositions) problems.push("first transposition is a transposition-end (T)");
         problems.push(`transpositions have 2 successive ${edit} at position ${i}`);
       }
 
-      if (edit === "\\") expected = "/";
-      else expected = "\\";
+      if (edit === "t") expected = "T";
+      else expected = "t";
 
       if (!gotTranspositions) gotTranspositions = true;
     }
   }
-  if (expected !== "\\") problems.push("last transposition is a transposition-start (\\)");
+  if (expected !== "t") problems.push("last transposition is a transposition-start (t)");
 
   return problems;
 }
@@ -254,14 +254,14 @@ function runDistanceTestCase(
                 args: dir.args,
                 options: opts,
                 expected:
-                  "an edit sequence which ends every transposition-start (\\) with a transposition-end (/)",
+                  "an edit sequence which ends every transposition-start (t) with a transposition-end (T)",
                 measured: `an edit sequence whose ${tIssue}: ${dir.measured.editSequence}`,
               });
             }
             const editSequenceDistance =
               dir.measured.editSequence.length -
               countOccurrences(dir.measured.editSequence, "e") -
-              countOccurrences(dir.measured.editSequence, "/");
+              countOccurrences(dir.measured.editSequence, "t");
             if (dir.measured.distance !== editSequenceDistance) {
               problems.push({
                 args: dir.args,
