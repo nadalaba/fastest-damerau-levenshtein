@@ -8,6 +8,18 @@ import {
   zeroPreparedPattern,
 } from "./pattern.ts";
 import * as Util from "./util.ts";
+import type {
+  AlgOptions,
+  InternalAlgOptions,
+  AlgResult,
+  DistanceOptions,
+  InternalDistanceOptions,
+  CompareResultNumeric,
+  CompareResultWithEditSequence,
+  CompareResult,
+  ClosestResult,
+  MakeOptional,
+} from "./types.ts";
 
 const alphabetSize = 0x110000;
 const peq = new Uint32Array(alphabetSize);
@@ -17,10 +29,6 @@ let previousWordPattern: Uint32Array = EMPTY_U32;
 let previousPattern: Uint32Array = EMPTY_U32;
 
 let mat: number[][] = [];
-
-type AlgOptions = { cutoff?: number; withEditSequence?: boolean };
-type InternalAlgOptions = AlgOptions & { debug?: boolean };
-type AlgResult = { distance: number; edits?: Uint32Array };
 
 function algWord(text: Uint32Array, options?: AlgOptions): AlgResult {
   const internalOptions = options as InternalAlgOptions | undefined;
@@ -239,27 +247,6 @@ function algX(text: Uint32Array, options?: AlgOptions): AlgResult {
   return result;
 }
 
-type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-type BaseDistanceOptions = {
-  noTrimEnd?: boolean;
-  splitStr?: (str: string) => Uint32Array;
-};
-export type DistanceOptions = AlgOptions & BaseDistanceOptions;
-type InternalDistanceOptions = InternalAlgOptions &
-  BaseDistanceOptions & {
-    noSwap?: boolean;
-    noTrim?: boolean;
-  };
-
-type CompareResultNumeric = { distance: number; similarity: number };
-export type CompareResultWithEditSequence = CompareResultNumeric & {
-  editSequence: string;
-};
-export type CompareResult<O extends DistanceOptions> = O extends { withEditSequence: true }
-  ? CompareResultWithEditSequence
-  : CompareResultNumeric;
-
 export function compare<O extends DistanceOptions>(
   patternStr: string,
   textStr: string,
@@ -383,10 +370,6 @@ export function compare<O extends DistanceOptions>(
   return ret as CompareResult<O>;
 }
 
-type ClosestResult<O extends DistanceOptions> = O extends { cutoff: number }
-  ? CompareResult<O> & { text: string | null; index: number }
-  : CompareResult<O> & { text: string; index: number };
-
 export function closest<O extends DistanceOptions>(
   pattern: string,
   list: string[],
@@ -491,3 +474,5 @@ function createEditSequenceFromEdits(
 
   return sequence.reverse().join("");
 }
+
+export type { DistanceOptions, CompareResult, ClosestResult } from "./types.ts";

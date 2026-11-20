@@ -1,10 +1,7 @@
 import { distance } from "./lowrance-wagner.ts";
 import { compare, DistanceOptions } from "fastest-damerau-levenshtein";
-export type {
-  DistanceOptions,
-  CompareResultWithEditSequence,
-  CompareResult,
-} from "fastest-damerau-levenshtein";
+export type { DistanceOptions, CompareResult } from "fastest-damerau-levenshtein";
+export type { CompareResultWithEditSequence } from "../../dist/esm/types.js";
 
 export type SimpleDistanceFn = typeof distance;
 export type FullDistanceFn = typeof compare;
