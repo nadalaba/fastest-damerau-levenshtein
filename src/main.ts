@@ -289,12 +289,12 @@ export function compare<O extends DistanceOptions>(
   let text = splitStr(textStr);
   let origTextLen = text.length;
   let textLen = origTextLen;
-  let patternShoter = patternLen <= textLen;
-  if (!internalOptions?.noSwap && !options?.withEditSequence && !patternShoter) {
+  let patternShorter = patternLen <= textLen;
+  if (!internalOptions?.noSwap && !options?.withEditSequence && !patternShorter) {
     [pattern, text] = [text, pattern];
     [patternLen, textLen] = [textLen, patternLen];
     [origPatternLen, origTextLen] = [origTextLen, origPatternLen];
-    patternShoter = true;
+    patternShorter = true;
   }
 
   // don't trim if pattern is cached
@@ -313,12 +313,12 @@ export function compare<O extends DistanceOptions>(
   let prefixLen = 0;
   let suffixLen = 0;
   if (!internalOptions?.noTrim && !originalPatternSameAsPrevious) {
-    prefixLen = commonPrefix(pattern, text, patternShoter ? patternLen : textLen);
+    prefixLen = commonPrefix(pattern, text, patternShorter ? patternLen : textLen);
     if (!options?.noTrimEnd) {
       suffixLen = commonSuffix(
         pattern,
         text,
-        patternShoter ? patternLen - prefixLen : textLen - prefixLen,
+        patternShorter ? patternLen - prefixLen : textLen - prefixLen,
       );
     }
     pattern = pattern.subarray(prefixLen, patternLen - suffixLen);
@@ -329,7 +329,7 @@ export function compare<O extends DistanceOptions>(
     // return if trimmed string's length became zero
     if (patternLen === 0 || textLen === 0) {
       ret.distance = patternLen + textLen;
-      ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
+      ret.similarity = 1 - ret.distance / (patternShorter ? origTextLen : origPatternLen);
       if (options?.withEditSequence) {
         ret.editSequence =
           "e".repeat(prefixLen) +
@@ -377,7 +377,7 @@ export function compare<O extends DistanceOptions>(
     if (options?.withEditSequence) ret.editSequence = "";
   } else {
     ret.distance = distance;
-    ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
+    ret.similarity = 1 - ret.distance / (patternShorter ? origTextLen : origPatternLen);
 
     // create edit sequence if requested
     if (options?.withEditSequence) {
