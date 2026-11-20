@@ -267,15 +267,13 @@ export function compare<O extends DistanceOptions>(
   const internalOptions = options as InternalDistanceOptions | undefined;
   const splitStr = options?.splitStr ?? toCodePoints;
   let pattern = splitStr(patternStr);
-  let origPatternLen = pattern.length;
-  let patternLen = origPatternLen;
 
   // early return (same string & cutoff < 1)
   let ret: MakeOptional<CompareResultWithEditSequence, "editSequence"> = options?.withEditSequence
     ? { distance: 0, similarity: 1, editSequence: "" }
     : { distance: 0, similarity: 1 };
   if (patternStr === textStr) {
-    if (options?.withEditSequence) ret.editSequence = "e".repeat(origPatternLen);
+    if (options?.withEditSequence) ret.editSequence = "e".repeat(pattern.length);
     return ret as CompareResult<O>;
   }
   if (options?.cutoff !== undefined && options?.cutoff < 1) {
@@ -287,20 +285,16 @@ export function compare<O extends DistanceOptions>(
 
   // swap
   let text = splitStr(textStr);
-  let origTextLen = text.length;
-  let textLen = origTextLen;
-  let patternShorter = patternLen <= textLen;
+  let patternShorter = pattern.length <= text.length;
   if (!internalOptions?.noSwap && !options?.withEditSequence && !patternShorter) {
     [pattern, text] = [text, pattern];
-    [patternLen, textLen] = [textLen, patternLen];
-    [origPatternLen, origTextLen] = [origTextLen, origPatternLen];
     patternShorter = true;
   }
 
   // don't trim if pattern is cached
   let originalPatternSameAsPrevious = false;
   let calculate;
-  if (patternLen > WORD_WIDTH) {
+  if (pattern.length > WORD_WIDTH) {
     originalPatternSameAsPrevious = compareArrayElements(pattern, previousPattern);
     calculate = algX;
   } else {
@@ -313,25 +307,23 @@ export function compare<O extends DistanceOptions>(
   let prefixLen = 0;
   let suffixLen = 0;
   if (!internalOptions?.noTrim && !originalPatternSameAsPrevious) {
-    const shorterString = patternShorter ? patternLen : textLen;
+    const shorterString = patternShorter ? pattern.length : text.length;
 
     prefixLen = commonPrefix(pattern, text, shorterString);
     if (!options?.noTrimEnd) {
       suffixLen = commonSuffix(pattern, text, shorterString - prefixLen);
     }
-    pattern = pattern.subarray(prefixLen, patternLen - suffixLen);
-    text = text.subarray(prefixLen, textLen - suffixLen);
-    patternLen -= prefixLen + suffixLen;
-    textLen -= prefixLen + suffixLen;
+    pattern = pattern.subarray(prefixLen, pattern.length - suffixLen);
+    text = text.subarray(prefixLen, text.length - suffixLen);
 
     // return if trimmed string's length became zero
-    if (patternLen === 0 || textLen === 0) {
-      ret.distance = patternLen + textLen;
-      ret.similarity = 1 - ret.distance / (patternShorter ? origTextLen : origPatternLen);
+    if (pattern.length === 0 || text.length === 0) {
+      ret.distance = pattern.length + text.length;
+      ret.similarity = 1 - ret.distance / (ret.distance + prefixLen + suffixLen);
       if (options?.withEditSequence) {
         ret.editSequence =
           "e".repeat(prefixLen) +
-          (patternLen === 0 ? "i" : "d").repeat(ret.distance) +
+          (pattern.length === 0 ? "i" : "d").repeat(ret.distance) +
           "e".repeat(suffixLen);
       }
       if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
@@ -347,7 +339,7 @@ export function compare<O extends DistanceOptions>(
 
   // prepare pattern
   if (trimmed || !originalPatternSameAsPrevious) {
-    if (patternLen > WORD_WIDTH) {
+    if (pattern.length > WORD_WIDTH) {
       if (!trimmed || !compareArrayElements(pattern, previousPattern)) {
         if (previousPattern.length !== 0) zeroPreparedPattern(previousPattern);
         preparePattern(pattern);
@@ -375,7 +367,8 @@ export function compare<O extends DistanceOptions>(
     if (options?.withEditSequence) ret.editSequence = "";
   } else {
     ret.distance = distance;
-    ret.similarity = 1 - ret.distance / (patternShorter ? origTextLen : origPatternLen);
+    ret.similarity =
+      1 - ret.distance / ((patternShorter ? text.length : pattern.length) + prefixLen + suffixLen);
 
     // create edit sequence if requested
     if (options?.withEditSequence) {
