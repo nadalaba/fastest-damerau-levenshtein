@@ -313,13 +313,11 @@ export function compare<O extends DistanceOptions>(
   let prefixLen = 0;
   let suffixLen = 0;
   if (!internalOptions?.noTrim && !originalPatternSameAsPrevious) {
-    prefixLen = commonPrefix(pattern, text, patternShorter ? patternLen : textLen);
+    const shorterString = patternShorter ? patternLen : textLen;
+
+    prefixLen = commonPrefix(pattern, text, shorterString);
     if (!options?.noTrimEnd) {
-      suffixLen = commonSuffix(
-        pattern,
-        text,
-        patternShorter ? patternLen - prefixLen : textLen - prefixLen,
-      );
+      suffixLen = commonSuffix(pattern, text, shorterString - prefixLen);
     }
     pattern = pattern.subarray(prefixLen, patternLen - suffixLen);
     text = text.subarray(prefixLen, textLen - suffixLen);
