@@ -239,7 +239,6 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
     }
   }
 
-  if (options?.cutoff && result.distance > options.cutoff) result.distance = options.cutoff + 1;
   return result;
 }
 
