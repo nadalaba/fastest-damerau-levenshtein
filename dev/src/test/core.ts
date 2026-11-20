@@ -35,11 +35,11 @@ function editString(
   splitStr?: (str: string) => number[],
 ): string {
   let firstTranspose = null;
-  let i = 0,
-    j = 0;
-  const splitFn = splitStr !== undefined ? splitStr : (str: string) => [...str];
-  let editedS1Arr = splitFn(s1);
-  let s2Arr = splitFn(s2);
+  let i = 0;
+  let j = 0;
+  splitStr ??= (str: string) => [...str].map((c) => c.codePointAt(0)!);
+  let editedS1Arr = splitStr(s1);
+  let s2Arr = splitStr(s2);
   for (let k = 0; k < editSequence.length; k++) {
     const edit = editSequence[k];
     if (edit === "e") {
@@ -47,7 +47,7 @@ function editString(
       j++;
     } else if (edit === "s") editedS1Arr[i++] = s2Arr[j++];
     else if (edit === "d") editedS1Arr.splice(i, 1);
-    else if (edit === "i") editedS1Arr.splice(i++, 0, s2Arr[j++].toString());
+    else if (edit === "i") editedS1Arr.splice(i++, 0, s2Arr[j++]);
     else if (edit === "t") {
       firstTranspose = i;
       i++;
@@ -61,13 +61,8 @@ function editString(
       firstTranspose = null;
     }
   }
-  const isNumberArray = (value: unknown): value is number[] =>
-    Array.isArray(value) && typeof value[0] === "number";
-  if (isNumberArray(editedS1Arr)) {
-    return String.fromCodePoint(...editedS1Arr);
-  } else {
-    return editedS1Arr.join("");
-  }
+
+  return String.fromCodePoint(...editedS1Arr);
 }
 
 function checkTranspositions(editSequence: string): string[] {
@@ -153,7 +148,7 @@ function runDistanceTestCase(
     const measuredReflectedDistance =
       typeof measuredReflected === "number" ? measuredReflected : measuredReflected.distance;
     const measuredSimilarity = typeof measured === "object" ? measured.similarity : undefined;
-    const splitFn = options?.splitStr ?? ((str: string) => [...str]);
+    const splitFn = options?.splitStr ?? ((str: string) => [...str].map((c) => c.codePointAt(0)!));
     let expectedSimilarity =
       typeof measured === "object"
         ? 1 - measuredDistance / Math.max(...testCase.args.map((s) => splitFn(s).length))

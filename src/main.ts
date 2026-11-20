@@ -15,7 +15,7 @@ let mat: number[][] = [];
 const alphabetSize = 0x110000;
 const peq = new Uint32Array(alphabetSize);
 let previousWordPattern: number[] = [];
-let previousPattern: number[] | string[] = [];
+let previousPattern: number[] = [];
 
 type AlgOptions = { cutoff?: number; withEditSequence?: boolean };
 type InternalAlgOptions = AlgOptions & { debug?: boolean };
@@ -80,7 +80,7 @@ function algWord(text: number[], options?: AlgOptions): AlgResult {
   return result;
 }
 
-function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
+function algX(text: number[], options?: AlgOptions): AlgResult {
   const internalOptions = options as InternalAlgOptions | undefined;
   const m = preparedPattern.length;
   const words = preparedPattern.words;
@@ -117,18 +117,14 @@ function algX(text: number[] | string[], options?: AlgOptions): AlgResult {
     let eqCarry = 0;
 
     let base = -1;
-    if (typeof textSymbol === "number" && textSymbol >= 0 && (textSymbol | 0) === textSymbol) {
-      if (textSymbol < DIRECT_LOOKUP_LIMIT) {
-        base = textSymbol * words;
-      } else {
-        const shifted = textSymbol - preparedPattern.highBase;
-        base =
-          shifted >= 0 && shifted < preparedPattern.highCount
-            ? preparedPattern.highStart + shifted * words
-            : (preparedPattern.wideOffsets?.get(textSymbol) ?? -1);
-      }
+    if (textSymbol < DIRECT_LOOKUP_LIMIT) {
+      base = textSymbol * words;
     } else {
-      base = preparedPattern.wideOffsets?.get(textSymbol) ?? -1;
+      const shifted = textSymbol - preparedPattern.highBase;
+      base =
+        shifted >= 0 && shifted < preparedPattern.highCount
+          ? preparedPattern.highStart + shifted * words
+          : (preparedPattern.wideOffsets?.get(textSymbol) ?? -1);
     }
 
     let checkForLesserB = false;
@@ -422,19 +418,15 @@ export function closest<O extends DistanceOptions>(
   return { ...minResult, text, index } as ClosestResult<O>;
 }
 
-function commonPrefix(
-  s1: string[] | number[],
-  s2: string[] | number[],
-  shorterLen: number,
-): number {
+function commonPrefix(s1: number[], s2: number[], shorterLen: number): number {
   let prefixLen = 0;
   while (prefixLen < shorterLen && s1[prefixLen] === s2[prefixLen]) prefixLen++;
   return prefixLen;
 }
 
 function commonSuffix(
-  s1: string[] | number[],
-  s2: string[] | number[],
+  s1: number[],
+  s2: number[],
   s1Len: number,
   s2Len: number,
   shorterLen: number,
@@ -457,15 +449,15 @@ function toCodePoints(str: string) {
       if (low >= 0xdc00 && low <= 0xdfff) {
         output[size++] = (high - 0xd800) * 1024 + (low - 0xdc00) + 0x10000;
         index++;
-        continue;
       }
+    } else {
+      output[size++] = high;
     }
-    output[size++] = high;
   }
   return output;
 }
 
-function compareArrayElements(arr1: string[] | number[], arr2: string[] | number[]): boolean {
+function compareArrayElements(arr1: number[], arr2: number[]): boolean {
   const arr1Len = arr1.length;
   if (arr1Len !== arr2.length) return false;
   for (let i = 0; i < arr1Len; i++) {
