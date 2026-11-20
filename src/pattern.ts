@@ -9,7 +9,7 @@ type WideOffsets = Map<number, number>;
 export type PreparedPattern = {
   length: number;
   words: number;
-  masks: Int32Array;
+  masks: Uint32Array;
   highBase: number;
   highCount: number;
   highStart: number;
@@ -19,21 +19,21 @@ export type PreparedPattern = {
 export const preparedPattern: PreparedPattern = {
   length: 0,
   words: 1,
-  masks: new Int32Array(DIRECT_LOOKUP_LIMIT),
+  masks: new Uint32Array(DIRECT_LOOKUP_LIMIT),
   highBase: 0,
   highCount: 0,
   highStart: 0,
   wideOffsets: null,
 };
 
-export function preparePattern(patternArr: number[]): void {
+export function preparePattern(patternArr: Uint32Array): void {
   preparedPattern.length = patternArr.length;
   const words = ((preparedPattern.length - 1) >>> WORD_WIDTH_SHIFT) + 1;
   preparedPattern.words = words;
   preparedPattern.highStart = DIRECT_LOOKUP_LIMIT * preparedPattern.words;
 
   if (preparedPattern.highStart > preparedPattern.masks.length) {
-    const grown = new Int32Array(preparedPattern.highStart);
+    const grown = new Uint32Array(preparedPattern.highStart);
     grown.set(preparedPattern.masks);
     preparedPattern.masks = grown;
   }
@@ -63,7 +63,7 @@ export function preparePattern(patternArr: number[]): void {
   const neededCells =
     preparedPattern.highStart + (preparedPattern.highCount + strayedHighsCount) * words;
   if (neededCells > preparedPattern.masks.length) {
-    const grown = new Int32Array(neededCells);
+    const grown = new Uint32Array(neededCells);
     grown.set(preparedPattern.masks);
     preparedPattern.masks = grown;
   }
@@ -93,7 +93,7 @@ export function preparePattern(patternArr: number[]): void {
   }
 }
 
-export function zeroPreparedPattern(patternArr: number[]): void {
+export function zeroPreparedPattern(patternArr: Uint32Array): void {
   const words = preparedPattern.words;
   for (const [i, symbol] of patternArr.entries()) {
     const word = i >>> WORD_WIDTH_SHIFT;

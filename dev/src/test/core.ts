@@ -12,6 +12,7 @@ import type {
   Problem,
   TestRunSummary,
 } from "../types";
+import { toCodePoints } from "fastest-damerau-levenshtein";
 
 const red = "\x1b[31m";
 const green = "\x1b[32m";
@@ -32,13 +33,13 @@ function editString(
   s1: string,
   s2: string,
   editSequence: string,
-  splitStr?: (str: string) => number[],
+  splitStr?: typeof toCodePoints,
 ): string {
   let firstTranspose = null;
   let i = 0;
   let j = 0;
-  splitStr ??= (str: string) => [...str].map((c) => c.codePointAt(0)!);
-  let editedS1Arr = splitStr(s1);
+  splitStr ??= toCodePoints;
+  let editedS1Arr = [...splitStr(s1)];
   let s2Arr = splitStr(s2);
   for (let k = 0; k < editSequence.length; k++) {
     const edit = editSequence[k];
@@ -148,7 +149,7 @@ function runDistanceTestCase(
     const measuredReflectedDistance =
       typeof measuredReflected === "number" ? measuredReflected : measuredReflected.distance;
     const measuredSimilarity = typeof measured === "object" ? measured.similarity : undefined;
-    const splitFn = options?.splitStr ?? ((str: string) => [...str].map((c) => c.codePointAt(0)!));
+    const splitFn = options?.splitStr ?? toCodePoints;
     let expectedSimilarity =
       typeof measured === "object"
         ? 1 - measuredDistance / Math.max(...testCase.args.map((s) => splitFn(s).length))
@@ -170,6 +171,7 @@ function runDistanceTestCase(
         measuredReflectedSequenceResult = editString(
           ...reflectedArgs,
           measuredReflected.editSequence,
+          options?.splitStr,
         );
         expectedReflectedSequenceResult = reflectedArgs[1];
       }

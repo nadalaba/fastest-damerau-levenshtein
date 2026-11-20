@@ -107,7 +107,7 @@ console.log(result);
 - `withEditSequence: boolean`: When `true`, the result includes an `editSequence` that transforms `pattern` into `text` (or, for `closest()`, the selected string), alongside the distance and similarity.
 - `cutoff: number`: Maximum distance to consider. If the distance exceeds it, `cutoff + 1` is returned as the distance, `0` as the similarity, and an empty string as the edit sequence if requested. With `closest()`, candidates beyond the cutoff are not selected; if none qualify, the result has `text: null` and `index: -1`.
 - `noTrimEnd: boolean`: Disables trimming of the common suffix before running the computation. This may be slower and can affect which edit sequence is returned. See [Which edit sequence is returned?](#which-edit-sequence-is-returned) for rationale.
-- `splitStr: (str: string) => number[]`: Custom function that converts each input string into an array of numeric symbols for comparison. By default, strings are split into Unicode code points. Use this option to compare different units, such as grapheme clusters; the distance, similarity, and any edit sequence will then operate on those units.
+- `splitStr: (str: string) => Uint32Array`: Custom function that converts each input string into an array of 32-bit unsigned-integers for comparison. By default, strings are split into Unicode code points. Use this option to compare different units, such as grapheme clusters; the distance, similarity, and any edit sequence will then operate on those units.
 
 ```js
 const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });

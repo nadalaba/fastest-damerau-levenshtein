@@ -7,21 +7,21 @@ import {
   preparePattern,
   zeroPreparedPattern,
 } from "./pattern.ts";
-//import { toString } from "./utils.ts";
-//export { toString } from "./utils.ts";
-
-let mat: number[][] = [];
 
 const alphabetSize = 0x110000;
 const peq = new Uint32Array(alphabetSize);
-let previousWordPattern: number[] = [];
-let previousPattern: number[] = [];
+
+const EMPTY_U32 = new Uint32Array(0);
+let previousWordPattern: Uint32Array = EMPTY_U32;
+let previousPattern: Uint32Array = EMPTY_U32;
+
+let mat: number[][] = [];
 
 type AlgOptions = { cutoff?: number; withEditSequence?: boolean };
 type InternalAlgOptions = AlgOptions & { debug?: boolean };
 type AlgResult = { distance: number; edits?: Uint32Array };
 
-function algWord(text: number[], options?: AlgOptions): AlgResult {
+function algWord(text: Uint32Array, options?: AlgOptions): AlgResult {
   const internalOptions = options as InternalAlgOptions | undefined;
   let j = 0; // for debug and edits only
   const m = previousWordPattern.length;
@@ -80,7 +80,7 @@ function algWord(text: number[], options?: AlgOptions): AlgResult {
   return result;
 }
 
-function algX(text: number[], options?: AlgOptions): AlgResult {
+function algX(text: Uint32Array, options?: AlgOptions): AlgResult {
   const internalOptions = options as InternalAlgOptions | undefined;
   const m = preparedPattern.length;
   const words = preparedPattern.words;
@@ -242,7 +242,7 @@ type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 type BaseDistanceOptions = {
   noTrimEnd?: boolean;
-  splitStr?: (str: string) => number[];
+  splitStr?: (str: string) => Uint32Array;
 };
 export type DistanceOptions = AlgOptions & BaseDistanceOptions;
 type InternalDistanceOptions = InternalAlgOptions &
@@ -297,7 +297,7 @@ export function compare<O extends DistanceOptions>(
     patternShoter = true;
   }
 
-  // trim
+  // don't trim if pattern is cached
   let originalPatternSameAsPrevious = false;
   let calculate;
   if (patternLen > WORD_WIDTH) {
@@ -307,6 +307,8 @@ export function compare<O extends DistanceOptions>(
     originalPatternSameAsPrevious = compareArrayElements(pattern, previousWordPattern);
     calculate = algWord;
   }
+
+  // trim
   let trimmed = false;
   let prefixLen = 0;
   let suffixLen = 0;
@@ -316,34 +318,33 @@ export function compare<O extends DistanceOptions>(
       suffixLen = commonSuffix(
         pattern,
         text,
-        patternLen,
-        textLen,
         patternShoter ? patternLen - prefixLen : textLen - prefixLen,
       );
     }
+    pattern = pattern.subarray(prefixLen, patternLen - suffixLen);
+    text = text.subarray(prefixLen, textLen - suffixLen);
     patternLen -= prefixLen + suffixLen;
     textLen -= prefixLen + suffixLen;
-    pattern = pattern.slice(prefixLen, patternLen + prefixLen);
-    text = text.slice(prefixLen, textLen + prefixLen);
-    if (prefixLen > 0 || suffixLen > 0) trimmed = true;
-  }
 
-  // return if trimmed string's length became zero
-  if (patternLen === 0 || textLen === 0) {
-    ret.distance = patternLen + textLen;
-    ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
-    if (options?.withEditSequence) {
-      ret.editSequence =
-        "e".repeat(prefixLen) +
-        (patternLen === 0 ? "i" : "d").repeat(ret.distance) +
-        "e".repeat(suffixLen);
+    // return if trimmed string's length became zero
+    if (patternLen === 0 || textLen === 0) {
+      ret.distance = patternLen + textLen;
+      ret.similarity = 1 - ret.distance / (patternShoter ? origTextLen : origPatternLen);
+      if (options?.withEditSequence) {
+        ret.editSequence =
+          "e".repeat(prefixLen) +
+          (patternLen === 0 ? "i" : "d").repeat(ret.distance) +
+          "e".repeat(suffixLen);
+      }
+      if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
+        ret.distance = options.cutoff + 1;
+        ret.similarity = 0;
+        if (options?.withEditSequence) ret.editSequence = "";
+      }
+      return ret as CompareResult<O>;
     }
-    if (options?.cutoff !== undefined && ret.distance > options?.cutoff) {
-      ret.distance = options.cutoff + 1;
-      ret.similarity = 0;
-      if (options?.withEditSequence) ret.editSequence = "";
-    }
-    return ret as CompareResult<O>;
+
+    if (prefixLen > 0 || suffixLen > 0) trimmed = true;
   }
 
   // prepare pattern
@@ -382,7 +383,7 @@ export function compare<O extends DistanceOptions>(
     if (options?.withEditSequence) {
       ret.editSequence =
         "e".repeat(prefixLen) +
-        createEditSequenceFromEdits(pattern, text, patternLen, textLen, edits!) +
+        createEditSequenceFromEdits(pattern, text, edits!) +
         "e".repeat(suffixLen);
     }
   }
@@ -418,29 +419,23 @@ export function closest<O extends DistanceOptions>(
   return { ...minResult, text, index } as ClosestResult<O>;
 }
 
-function commonPrefix(s1: number[], s2: number[], shorterLen: number): number {
+function commonPrefix(s1: Uint32Array, s2: Uint32Array, shorterLen: number): number {
   let prefixLen = 0;
   while (prefixLen < shorterLen && s1[prefixLen] === s2[prefixLen]) prefixLen++;
   return prefixLen;
 }
 
-function commonSuffix(
-  s1: number[],
-  s2: number[],
-  s1Len: number,
-  s2Len: number,
-  shorterLen: number,
-): number {
-  const s1End = s1Len - 1;
-  const s2End = s2Len - 1;
+function commonSuffix(s1: Uint32Array, s2: Uint32Array, shorterLen: number): number {
+  const s1End = s1.length - 1;
+  const s2End = s2.length - 1;
   let suffixLen = 0;
   while (suffixLen < shorterLen && s1[s1End - suffixLen] === s2[s2End - suffixLen]) suffixLen++;
   return suffixLen;
 }
 
-function toCodePoints(str: string) {
+export function toCodePoints(str: string): Uint32Array {
   const length = str.length;
-  const output: number[] = [];
+  const output = new Uint32Array(length);
   let size = 0;
   for (let index = 0; index < length; index++) {
     const high = str.charCodeAt(index);
@@ -454,10 +449,10 @@ function toCodePoints(str: string) {
       output[size++] = high;
     }
   }
-  return output;
+  return output.subarray(0, size);
 }
 
-function compareArrayElements(arr1: number[], arr2: number[]): boolean {
+function compareArrayElements(arr1: Uint32Array, arr2: Uint32Array): boolean {
   const arr1Len = arr1.length;
   if (arr1Len !== arr2.length) return false;
   for (let i = 0; i < arr1Len; i++) {
@@ -467,10 +462,8 @@ function compareArrayElements(arr1: number[], arr2: number[]): boolean {
 }
 
 function createEditSequenceFromEdits(
-  pattern: number[],
-  text: number[],
-  patternLen: number,
-  textLen: number,
+  pattern: Uint32Array,
+  text: Uint32Array,
   edits: Uint32Array,
 ): string {
   const sequence = [];
@@ -482,10 +475,10 @@ function createEditSequenceFromEdits(
    * 1x0 i
    * 1x1 d
    */
-  const words = patternLen > WORD_WIDTH ? preparedPattern.words : 1;
-  let i = (patternLen - 1) & WORD_MASK,
-    j = textLen - 1,
-    r = words - 1;
+  const words = pattern.length > WORD_WIDTH ? preparedPattern.words : 1;
+  let i = (pattern.length - 1) & WORD_MASK;
+  let j = text.length - 1;
+  let r = words - 1;
   const decrementI = () => {
     if (--i < 0) {
       i = 31;
