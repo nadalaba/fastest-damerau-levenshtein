@@ -15,10 +15,8 @@ import type {
   DistanceOptions,
   InternalDistanceOptions,
   GetDistanceResult,
-  CompareResultWithEditSequence,
   CompareResult,
   ClosestResult,
-  MakeOptional,
 } from "./types.ts";
 
 const alphabetSize = 0x110000;
@@ -345,7 +343,7 @@ function getDistance(
   // calculate
   ({ distance: ret.distance, edits: ret.edits } = calculate(ret.text, options));
 
-  //if (internalOptions?.debug) console.log(toString(pattern, text, mat));
+  //if (internalOptions?.debug) console.log(Util.toString(pattern, text, mat));
 
   return ret;
 }
@@ -354,7 +352,7 @@ function prepareResult<O extends DistanceOptions>(
   { pattern, text, prefixLen, suffixLen, distance, edits }: GetDistanceResult,
   options?: O,
 ): CompareResult<O> {
-  const ret: MakeOptional<CompareResultWithEditSequence, "editSequence"> = options?.withEditSequence
+  const ret = options?.withEditSequence
     ? { distance, similarity: 1, editSequence: "" }
     : { distance, similarity: 1 };
 

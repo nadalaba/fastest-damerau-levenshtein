@@ -1,4 +1,4 @@
-//import { toString } from "fastest-damerau-levenshtein";
+//import { toString } from "../../dist/esm/util.js";
 
 export function distance(s1: string, s2: string): number {
   const s1Arr = [...s1];
