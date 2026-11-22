@@ -28,7 +28,7 @@ jobs:
         run: pn lint
 
       - name: Smoke Test - CJS
-        run: pn smokeTest:cjs
+        run: pn smoke-test:cjs
 
       - name: Test
         run: pn test
@@ -58,7 +58,7 @@ jobs:
         run: pn lint
 
       - name: Smoke Test - CJS
-        run: pn smokeTest:cjs
+        run: pn smoke-test:cjs
 
       - name: Test
         run: pn test
