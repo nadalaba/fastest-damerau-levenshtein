@@ -80,16 +80,13 @@ export function preparePattern(patternArr: Uint32Array): void {
       const i = highs.at[d];
       const codePoint = highs.of[d];
 
-      let slot = preparedPattern.wideOffsets.get(codePoint);
-      if (slot === undefined) {
-        slot = preparedPattern.wideOffsets.size;
-        preparedPattern.wideOffsets.set(codePoint, slot);
+      let base = preparedPattern.wideOffsets.get(codePoint);
+      if (base === undefined) {
+        base = preparedPattern.highStart + preparedPattern.wideOffsets.size * words;
+        preparedPattern.wideOffsets.set(codePoint, base);
       }
-      const base = preparedPattern.highStart + slot * words;
       preparedPattern.masks[base + (i >>> WORD_WIDTH_SHIFT)] |= 1 << (i & WORD_MASK);
     }
-    for (const [symbol, slot] of preparedPattern.wideOffsets)
-      preparedPattern.wideOffsets.set(symbol, preparedPattern.highStart + slot * words);
   }
 }
 
