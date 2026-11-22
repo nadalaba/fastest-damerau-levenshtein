@@ -33,11 +33,11 @@ jobs:
           ${{ matrix.runtime }} run ${{ matrix.write-flags }} scripts/generate-cjs-package.mjs
           pn -r run build
 
-      - name: Test
-        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dev/dist/test/main.js
-
       - name: Smoke Test - ESM
         run: ${{ matrix.runtime }} run dev/src/test/smoke-test.mjs
 
       - name: Smoke Test - CJS
         run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dev/src/test/smoke-test.cjs
+
+      - name: Test
+        run: ${{ matrix.runtime }} run ${{ matrix.read-flags }} dev/dist/test/main.js

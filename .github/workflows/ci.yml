@@ -22,14 +22,14 @@ jobs:
       - name: Build
         run: pn build
 
-      - name: Test
-        run: pn test
-
       - name: Smoke Test - ESM
         run: pn smoke-test:esm
 
       - name: Smoke Test - CJS
         run: pn smoke-test:cjs
+
+      - name: Test
+        run: pn test
 
       - name: Lint
         if: ${{ matrix.node >= 20 }}

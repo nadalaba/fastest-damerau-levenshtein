@@ -27,11 +27,11 @@ jobs:
       - name: Lint
         run: pn lint
 
-      - name: Test
-        run: pn test
-
       - name: Smoke Test - CJS
         run: pn smokeTest:cjs
+
+      - name: Test
+        run: pn test
 
       - name: Publish to npmjs
         run: pn publish --provenance --access public
@@ -57,11 +57,11 @@ jobs:
       - name: Lint
         run: pn lint
 
-      - name: Test
-        run: pn test
-
       - name: Smoke Test - CJS
         run: pn smokeTest:cjs
+
+      - name: Test
+        run: pn test
 
       - name: Make the Package Scoped
         run: jq --arg scopedName "@${{ github.repository }}" '.name = $scopedName' package.json > tmp.json && mv tmp.json package.json
