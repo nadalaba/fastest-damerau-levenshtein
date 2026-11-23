@@ -114,7 +114,7 @@ const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 const symbolIds = new Map();
 
 function splitGraphemes(str) {
-  return Array.from(segmenter.segment(str), ({ segment }) => {
+  return Uint32Array.from(segmenter.segment(str), ({ segment }) => {
     if (!symbolIds.has(segment)) symbolIds.set(segment, symbolIds.size);
     return symbolIds.get(segment);
   });
