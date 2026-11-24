@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { compare, closest } from "./dist/esm/main.js";
+import pkg from "./package.json" with { type: "json" };
 
 const args = process.argv.slice(2);
 
@@ -167,8 +168,7 @@ function printUsage() {
     " ".repeat(4) +
     "-i, --index".padEnd(24, " ") +
     "print the index of the closest string in <s2> to <s1>\n";
-  const url =
-    "https://github.com/nadalaba/fastest-damerau-levenshtein/blob/master/README.md#which-edit-sequence-is-returned";
+  const url = pkg.homepage.replace(/readme$/, "which-edit-sequence-is-returned");
   const label = "README";
   const hyperlink = `\u001B]8;;${url}\u0007${label}\u001B]8;;\u0007`;
   usage +=
