@@ -102,9 +102,9 @@ const printFlagsCount = Object.values(printFlags).filter((pf) => pf).length;
 const options = {};
 if (printFlags?.editSequence !== undefined) options.withEditSequence = printFlags.editSequence;
 if (optionsWithValue?.cutoff !== undefined) {
-  if (!/^\d+$/.test(optionsWithValue.cutoff)) {
+  if (!/^[+-]?\d*(\.\d+)?$/.test(optionsWithValue.cutoff)) {
     console.log(
-      `ERROR: cutoff value should be a positive integer. '${optionsWithValue.cutoff}' is not a positive integer.\n`,
+      `ERROR: cutoff value should be a number. '${optionsWithValue.cutoff}' is not a number.\n`,
     );
     printUsage();
     process.exit(1);
