@@ -93,7 +93,7 @@ for (let i = 0; i < args.length; i++) {
 
 if (cliMetaFlag !== undefined) {
   if (cliMetaFlag === "help") printUsage();
-  else if(cliMetaFlag === "version") console.log(`v${pkg.version}`);
+  else if (cliMetaFlag === "version") console.log(`v${pkg.version}`);
   process.exit(0);
 }
 
