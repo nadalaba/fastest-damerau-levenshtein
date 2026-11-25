@@ -5,9 +5,11 @@ import pkg from "./package.json" with { type: "json" };
 
 const args = process.argv.slice(2);
 
+const possibleCliMetaFlags = new Set(["help", "version"]);
 const possiblePrintFlags = new Set(["distance", "similarity", "editSequence", "text", "index"]);
 const possibleOtherFlags = new Set(["noTrim", "noTrimEnd"]);
 const possibleOptionsWithValue = new Set(["cutoff"]);
+let cliMetaFlag = undefined;
 const printFlags = {};
 const otherFlags = {};
 const optionsWithValue = {};
@@ -27,6 +29,8 @@ for (let i = 0; i < args.length; i++) {
         process.exit(1);
       }
       optionsWithValue[camelCasedOption] = optionValue;
+    } else if (possibleCliMetaFlags.has(camelCasedOption)) {
+      cliMetaFlag ??= camelCasedOption;
     } else if (possiblePrintFlags.has(camelCasedOption)) {
       printFlags[camelCasedOption] = true;
     } else if (possibleOtherFlags.has(camelCasedOption)) {
@@ -62,6 +66,14 @@ for (let i = 0; i < args.length; i++) {
         }
       }
       if (parsedFlag) break;
+      for (const cmF of possibleCliMetaFlags) {
+        if (option === cmF.slice(0, 1)) {
+          cliMetaFlag ??= cmF;
+          parsedFlag = true;
+          break;
+        }
+      }
+      if (parsedFlag) break;
       for (const pF of possiblePrintFlags) {
         if (option === pF.slice(0, 1)) {
           printFlags[pF] = true;
@@ -77,6 +89,12 @@ for (let i = 0; i < args.length; i++) {
   } else {
     strings.push(arg);
   }
+}
+
+if (cliMetaFlag !== undefined) {
+  if (cliMetaFlag === "help") printUsage();
+  else if(cliMetaFlag === "version") console.log(`v${pkg.version}`);
+  process.exit(0);
 }
 
 const printFlagsCount = Object.values(printFlags).filter((pf) => pf).length;
@@ -140,6 +158,7 @@ function printUsage() {
   usage += "\n";
   usage += "Options:\n";
   usage += " ".repeat(4) + "-h, --help".padEnd(24, " ") + "print usage\n";
+  usage += " ".repeat(4) + "-v, --version".padEnd(24, " ") + "print package version\n";
   usage +=
     " ".repeat(4) +
     "-c, --cutoff=<number>".padEnd(24, " ") +
