@@ -65,6 +65,7 @@
     "smoke-test:esm": "node dev/src/test/smoke-test.mjs",
     "smoke-test:cjs": "node dev/src/test/smoke-test.cjs",
     "bench": "pn build:esm && cd dev && pn bench",
+    "release": "node --env-file=.env scripts/release.mjs",
     "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
